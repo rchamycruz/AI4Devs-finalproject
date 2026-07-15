@@ -200,6 +200,7 @@ public class ArtistQueryService
                 .Select(p => new PortfolioItemDto(p.Id, p.ImageUrl, p.ThumbnailUrl, p.Style.Slug, p.IsFeatured, p.SortOrder))
                 .ToList(),
             Certifications: artist.Certifications
+                .Where(c => c.IsActive)
                 .Select(c => new CertificationDto(c.Type.ToString().ToLowerInvariant(), c.Name, c.Issuer, c.ValidUntil, c.IsActive))
                 .ToList(),
             Awards: artist.Awards
