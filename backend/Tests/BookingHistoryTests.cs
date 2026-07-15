@@ -100,6 +100,34 @@ public class BookingHistoryTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task GetMyBookings_Excludes_Expired_Holds_But_Shows_Live_Ones()
+    {
+        await using var factory = CreateFactory();
+        var client = await LoginAsync(factory, "client@test.cl", ClientPassword);
+
+        Guid expiredHoldId;
+        Guid liveHoldId;
+        await using (var context = CreateContext())
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+            var expired = MakeBooking(_clientId, _artistProfileId, today.AddDays(10), BookingStatus.PendingPayment);
+            expired.ExpiresAt = DateTime.UtcNow.AddMinutes(-1);
+            var live = MakeBooking(_clientId, _artistProfileId, today.AddDays(11), BookingStatus.PendingPayment);
+            live.ExpiresAt = DateTime.UtcNow.AddMinutes(4);
+            context.Bookings.AddRange(expired, live);
+            await context.SaveChangesAsync();
+            expiredHoldId = expired.Id;
+            liveHoldId = live.Id;
+        }
+
+        var body = await (await client.GetAsync("/api/bookings/me"))
+            .Content.ReadFromJsonAsync<BookingListResponse>();
+
+        Assert.DoesNotContain(body!.Data, b => b.Id == expiredHoldId);
+        Assert.Contains(body.Data, b => b.Id == liveHoldId);
+    }
+
+    [Fact]
     public async Task GetMyBookings_Without_Token_Returns_401()
     {
         await using var factory = CreateFactory();

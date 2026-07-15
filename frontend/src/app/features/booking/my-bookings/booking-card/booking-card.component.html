@@ -57,6 +57,16 @@
       </div>
     } @else {
       <div class="booking-card__actions">
+        @if (canPay()) {
+          <button
+            type="button"
+            class="booking-card__btn booking-card__btn--primary"
+            [disabled]="busy()"
+            (click)="pay.emit(booking())"
+          >
+            Continuar pago
+          </button>
+        }
         @if (canComplete()) {
           <button
             type="button"

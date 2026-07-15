@@ -31,6 +31,7 @@
           [busy]="busyBookingId() === booking.id"
           (complete)="onComplete($event)"
           (cancel)="onCancel($event)"
+          (pay)="onPay($event)"
         />
       }
     </div>

@@ -124,6 +124,45 @@ describe('MyBookingsComponent', () => {
     discardPeriodicTasks();
   }));
 
+  it('continuar pago crea una orden y redirige al checkout', () => {
+    const booking = mockBooking({
+      status: 'pending_payment',
+      expiresAt: new Date(Date.now() + 4 * 60000).toISOString()
+    });
+    spyOn(bookingService, 'getMyBookings').and.returnValue(of(listResponse([booking])));
+    spyOn(bookingService, 'createPayment').and.returnValue(
+      of({ paymentUrl: 'http://flow.test/checkout?token=t9', token: 't9' })
+    );
+    const redirectSpy = spyOn(bookingService, 'redirectTo');
+    createComponent();
+
+    component.onPay(booking);
+
+    expect(bookingService.createPayment).toHaveBeenCalledWith('b1');
+    expect(redirectSpy).toHaveBeenCalledWith('http://flow.test/checkout?token=t9');
+  });
+
+  it('si el hold expiró al continuar el pago, recarga la lista con aviso', fakeAsync(() => {
+    const booking = mockBooking({
+      status: 'pending_payment',
+      expiresAt: new Date(Date.now() + 1000).toISOString()
+    });
+    const listSpy = spyOn(bookingService, 'getMyBookings').and.returnValues(
+      of(listResponse([booking])),
+      of(listResponse([]))
+    );
+    spyOn(bookingService, 'createPayment').and.returnValue(throwError(() => new Error('409')));
+    createComponent();
+
+    component.onPay(booking);
+    tick();
+    fixture.detectChanges();
+
+    expect(listSpy).toHaveBeenCalledTimes(2);
+    expect(fixture.nativeElement.textContent).toContain('El tiempo de reserva expiró');
+    discardPeriodicTasks();
+  }));
+
   it('pagina con "Ver más" cuando hay más reservas', () => {
     const first = listResponse([mockBooking()], 2);
     const second = listResponse([mockBooking({ id: 'b2' })], 2);

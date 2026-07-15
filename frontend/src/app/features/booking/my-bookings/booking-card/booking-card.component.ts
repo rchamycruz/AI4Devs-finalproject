@@ -19,6 +19,7 @@ export class BookingCardComponent {
   readonly busy = input(false);
   readonly complete = output<Booking>();
   readonly cancel = output<Booking>();
+  readonly pay = output<Booking>();
 
   readonly expanded = signal(false);
   /** Inline confirmation step (CA10 dialog / "¿Asististe?" antes de completar). */
@@ -34,6 +35,12 @@ export class BookingCardComponent {
   readonly showReviewCta = computed(
     () => this.booking().status === 'completed' && !this.booking().hasReview
   );
+
+  /** Hold vivo (US0008): el backend solo lista pending_payment no expirados, pero re-chequeamos por si la vista quedó abierta. */
+  readonly canPay = computed(() => {
+    const b = this.booking();
+    return b.status === 'pending_payment' && !!b.expiresAt && new Date(b.expiresAt) > new Date();
+  });
 
   statusLabel(): string {
     const labels: Record<string, string> = {

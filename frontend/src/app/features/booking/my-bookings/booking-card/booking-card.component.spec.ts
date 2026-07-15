@@ -72,6 +72,26 @@ describe('BookingCardComponent', () => {
     expect(fixture.nativeElement.textContent).not.toContain('Calificar');
   });
 
+  it('hold vivo (pending_payment no expirado) muestra "Continuar pago"', () => {
+    createComponent(mockBooking({
+      status: 'pending_payment',
+      expiresAt: new Date(Date.now() + 4 * 60000).toISOString()
+    }));
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Continuar pago');
+    expect(text).not.toContain('Cancelar reserva');
+  });
+
+  it('hold expirado no muestra "Continuar pago"', () => {
+    createComponent(mockBooking({
+      status: 'pending_payment',
+      expiresAt: new Date(Date.now() - 60000).toISOString()
+    }));
+
+    expect(fixture.nativeElement.textContent).not.toContain('Continuar pago');
+  });
+
   it('pide confirmación antes de emitir la acción (diálogo CA10)', () => {
     createComponent(mockBooking({ bookingDate: '2020-01-06' }));
     let emitted = false;

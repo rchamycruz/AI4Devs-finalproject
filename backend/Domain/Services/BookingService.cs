@@ -48,12 +48,16 @@ public class BookingService
         page = Math.Max(1, page);
         pageSize = Math.Clamp(pageSize, 1, 50);
 
+        // Expired holds are dead bookings (the slot is already released, US0008 CA8):
+        // they must not surface in the history. Live holds do appear so the client can resume payment.
+        var now = DateTime.UtcNow;
         var query = _context.Bookings
             .AsNoTracking()
             .Include(b => b.ArtistProfile).ThenInclude(p => p.User)
             .Include(b => b.Style)
             .Include(b => b.Review)
-            .Where(b => b.ClientId == clientId);
+            .Where(b => b.ClientId == clientId
+                && (b.Status != BookingStatus.PendingPayment || b.ExpiresAt > now));
 
         if (!string.IsNullOrWhiteSpace(status))
         {

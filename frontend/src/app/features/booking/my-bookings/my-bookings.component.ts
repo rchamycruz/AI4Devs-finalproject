@@ -66,6 +66,20 @@ export class MyBookingsComponent implements OnInit {
     this.runAction(booking, this.bookingService.cancelBooking(booking.id), 'Reserva cancelada');
   }
 
+  /** Retoma el pago de un hold vivo (US0008/US0009): nueva orden Flow y redirect al checkout. */
+  onPay(booking: Booking): void {
+    this.busyBookingId.set(booking.id);
+    this.bookingService.createPayment(booking.id).subscribe({
+      next: (response) => this.bookingService.redirectTo(response.paymentUrl),
+      error: () => {
+        this.busyBookingId.set(null);
+        this.showToast('El tiempo de reserva expiró. Vuelve a elegir un horario.');
+        this.page = 1;
+        this.load();
+      }
+    });
+  }
+
   private runAction(booking: Booking, action$: ReturnType<BookingService['completeBooking']>, message: string): void {
     this.busyBookingId.set(booking.id);
     action$.subscribe({
