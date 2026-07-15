@@ -134,14 +134,15 @@ export class ArtistProfileComponent implements OnInit {
     return (value / 5) * 100;
   }
 
+  // day_of_week: 0=Monday ... 6=Sunday (convención del modelo de datos)
   getDayLabel(dayOfWeek: number): string {
-    const days = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
+    const days = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'];
     return days[dayOfWeek] ?? '';
   }
 
   getWeekAvailability(): { day: string; available: boolean }[] {
     const slots = this.artist()?.availableSlots ?? [];
-    const days = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
+    const days = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'];
     return days.map((day, i) => ({
       day,
       available: slots.some(s => s.dayOfWeek === i)
