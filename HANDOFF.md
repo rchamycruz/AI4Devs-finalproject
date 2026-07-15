@@ -49,11 +49,11 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
 
 ### Dónde quedamos
 
-- ✅ **Fase 0** (fundaciones) y **US0001** (login) mergeadas a `main` (PRs #1–#3).
-- 🟣 **US0003 lista para PR** — rama `feature/us0003-vitrina`.
-  - **TASK0001** ✅ Backend `GET /api/showcase`: `ShowcaseService` (Haversine + secciones), `ShowcaseController`, DTOs (`ShowcaseResponse`, `ShowcaseSection`, `ShowcaseItem`, `ArtistCardDto`, `SponsorBadgeDto`). 7 tests integración (Testcontainers postgis) en verde.
-  - **TASK0002** ✅ Frontend vitrina: `ShowcaseService`, `ArtistCardComponent`, `ShowcaseSectionComponent`, `ShowcasePageComponent` (ruta `/`, geolocalización, skeleton, error handling). 19 tests en verde.
-- ⬜ Prompts de US0003 pendientes de registrar en `prompts/00-all-prompts.md`.
+- ✅ **Fase 0**, **US0001**, **US0003–US0007** mergeadas a `main` (PRs #1–#11).
+- 🔵 **US0008 en desarrollo** — rama `feature/us0008-seleccionar-slot` (recién creada, sin código aún).
+  - **TASK0001** ⬜ Backend: `GET /api/artists/{id}/availability?week=` + `POST /api/bookings/hold` (TTL 5 min).
+  - **TASK0002** ⬜ Frontend: calendario semanal + resumen de reserva con countdown.
+- **Pendiente deferred**: `fix-search-dropdown` (dropdown de sugerencias se superpone con "Resultados").
 
 ### Decisiones/contexto no evidentes en el repo
 
