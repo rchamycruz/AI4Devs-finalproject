@@ -79,7 +79,7 @@ describe('ArtistProfileComponent', () => {
         { provide: ArtistProfileService, useValue: artistService },
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { params: { slug: 'carlos-ink' } } }
+          useValue: { snapshot: { params: { slug: 'carlos-ink' }, queryParams: {} } }
         }
       ]
     }).compileComponents();
