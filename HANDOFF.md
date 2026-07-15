@@ -50,9 +50,10 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
 ### Dónde quedamos
 
 - ✅ **Fase 0**, **US0001**, **US0003–US0007** mergeadas a `main` (PRs #1–#11).
-- 🔵 **US0008 en desarrollo** — rama `feature/us0008-seleccionar-slot` (recién creada, sin código aún).
-  - **TASK0001** ⬜ Backend: `GET /api/artists/{id}/availability?week=` + `POST /api/bookings/hold` (TTL 5 min).
-  - **TASK0002** ⬜ Frontend: calendario semanal + resumen de reserva con countdown.
+- 🟣 **US0008 lista para PR** — rama `feature/us0008-seleccionar-slot`.
+  - **TASK0001** ✅ Backend: `AvailabilityService` (slots semanales desde la grilla `Availability`, excluye bookings confirmados/holds activos/blocked dates/pasado) + `POST /api/bookings/hold` (booking `pending_payment` con TTL 5 min, `SELECT FOR UPDATE` por artista contra race conditions, limpieza lazy de holds expirados). 12 tests integración; suite backend 59/59.
+  - **TASK0002** ✅ Frontend: `WeeklyCalendarComponent` (navegación solo a futuro), `BookingSummaryComponent` (ruta `/reserva` con authGuard, countdown 5 min), integración en perfil de artista (sin sesión → login con returnUrl + slot preseleccionado en query params; 409 → mensaje). 12 tests; suite frontend 54/54.
+- El botón "Pagar depósito" navega a `/pago/:bookingId` — esa ruta la implementa **US0009**.
 - **Pendiente deferred**: `fix-search-dropdown` (dropdown de sugerencias se superpone con "Resultados").
 
 ### Decisiones/contexto no evidentes en el repo
