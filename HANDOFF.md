@@ -66,8 +66,8 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
 ### Comandos útiles
 
 ```bash
-# Infra local
-docker-compose up -d postgres minio
+# Infra local (servicios: db=PostgreSQL, storage=MinIO, create-bucket)
+docker-compose up -d
 
 # Backend (desde backend/)
 dotnet test                        # requiere Docker corriendo (Testcontainers)
