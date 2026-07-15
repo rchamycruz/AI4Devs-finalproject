@@ -41,6 +41,7 @@ Estados posibles: ⬜ Pendiente · 🔵 En desarrollo · 🟣 En revisión · �
 
 1. ~~Decisiones pendientes en `fixs/issue-004.md` §E~~ — ✅ resueltas el 2026-07-14 (ver issue-004 §G). `api-spec.yml` v2.0.0 sincronizada.
 2. ~~Cuenta sandbox de Flow~~ — ✅ cuenta Flow creada el 2026-07-14 (rubro declarado: reserva/depósitos de servicios de tatuaje). Falta obtener credenciales sandbox (apiKey/secretKey) al llegar a US0009; hasta entonces se usa mock.
+3. **Integración Flow real con cuenta sandbox** — ⏸️ pendiente (decisión 2026-07-15). US0009 quedó implementada mock-first: el `FlowClient` real (firma HMAC) ya existe en `backend/Infrastructure/External/FlowClient.cs`; cuando se obtengan las credenciales, configurar `Flow:ApiKey`, `Flow:SecretKey` y `Flow:UseMock=false`, y probar el flujo end-to-end contra sandbox.flow.cl. No bloquea el resto del backlog.
 
 ## Inventario de documentación
 
@@ -64,5 +65,4 @@ Estados posibles: ⬜ Pendiente · 🔵 En desarrollo · 🟣 En revisión · �
 
 1. **US0009** — crear PR de `feature/us0009-pago-flow` → main y mergear
 2. **US0010** (5 SP) — Historial de reservas + confirmar asistencia
-3. **Flow real**: al obtener credenciales sandbox, configurar `Flow:ApiKey/SecretKey` y `Flow:UseMock=false` (el `FlowClient` real con firma HMAC ya está implementado)
-4. **Pendiente deferred**: `fix-search-dropdown` (dropdown sugerencias se superpone con `Resultados`)
+3. **Pendiente deferred**: integración Flow real con sandbox (ver Bloqueos §3) · `fix-search-dropdown` (dropdown sugerencias se superpone con `Resultados`)

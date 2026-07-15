@@ -54,7 +54,7 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
   - **TASK0001** ✅ Backend: `IFlowClient` (FlowClient real con firma HMAC-SHA256 + `MockFlowClient` activo con `Flow:UseMock=true`), `POST /api/payments/create` (fee 7% configurable `Platform:CommissionRate`), `POST /api/payments/confirm` (webhook idempotente: pago OK → booking `confirmed`), `GET /api/payments/return`, `POST /api/payments/mock-outcome` (solo mock), `GET /api/bookings/{id}` (owner-only). 9 tests; suite backend 68/68.
   - **TASK0002** ✅ Frontend: "Pagar depósito" → `/payments/create` → redirect al checkout; `/pago-simulado` (checkout simulado con botones pagar/rechazar); `/reservas/:bookingId` (confirmación CA4 o error con reintento CA5; confía en el estado real del booking si el webhook llega tarde). 7 tests; suite frontend 61/61.
 - **Rechazo de pago**: Payment queda `pending` (el modelo no tiene estado `failed`); el cliente puede reintentar mientras el hold viva y el TTL libera el slot (CA6).
-- **Flow real**: al obtener credenciales sandbox → `Flow:ApiKey/SecretKey` + `Flow:UseMock=false`. El resto no cambia.
+- **Flow real**: ⏸️ deferred por decisión del 2026-07-15 — se seguirá con el mock. Al retomar: obtener credenciales sandbox → `Flow:ApiKey/SecretKey` + `Flow:UseMock=false` + prueba end-to-end contra sandbox.flow.cl. El resto del código no cambia.
 - **Pendiente deferred**: `fix-search-dropdown` (dropdown de sugerencias se superpone con "Resultados").
 
 ### Decisiones/contexto no evidentes en el repo
