@@ -16,6 +16,9 @@ export class ArtistCardComponent {
   readonly artist = input<ArtistCard | null>(null);
 
   readonly cardArtist = computed(() => this.artist() ?? this.item()?.artist ?? null);
-  readonly cardImage = computed(() => this.item()?.imageUrl ?? this.cardArtist()?.profilePhotoUrl ?? '');
+  readonly cardImage = computed(() =>
+    this.item()?.imageUrl ?? this.cardArtist()?.featuredImageUrl ?? this.cardArtist()?.profilePhotoUrl ?? ''
+  );
   readonly cardStyle = computed(() => this.item()?.style ?? this.cardArtist()?.styles[0] ?? 'Sin estilo');
+  readonly cardHasAwards = computed(() => this.cardArtist()?.hasAwards ?? false);
 }

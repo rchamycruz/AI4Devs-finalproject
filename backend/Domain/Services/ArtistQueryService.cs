@@ -79,6 +79,7 @@ public class ArtistQueryService
                 .Include(artist => artist.ArtistStyles).ThenInclude(style => style.Style)
                 .Include(artist => artist.PortfolioItems).ThenInclude(item => item.Style)
                 .Include(artist => artist.Certifications)
+                .Include(artist => artist.Awards)
                 .Include(artist => artist.Sponsorships.Where(sponsorship => sponsorship.IsActive))
                 .Include(artist => artist.Availabilities)
                 .Include(artist => artist.BlockedDates)
@@ -104,6 +105,7 @@ public class ArtistQueryService
             .Include(artist => artist.ArtistStyles).ThenInclude(style => style.Style)
             .Include(artist => artist.PortfolioItems).ThenInclude(item => item.Style)
             .Include(artist => artist.Certifications)
+            .Include(artist => artist.Awards)
             .Include(artist => artist.Sponsorships.Where(sponsorship => sponsorship.IsActive))
             .AsSplitQuery()
             .Skip((page - 1) * pageSize)
@@ -142,6 +144,9 @@ public class ArtistQueryService
         ArtistName: $"{artist.User.FirstName} {artist.User.LastName}",
         Slug: artist.Slug,
         ProfilePhotoUrl: artist.User.AvatarUrl,
+        FeaturedImageUrl: artist.PortfolioItems
+            .OrderBy(p => p.IsFeatured ? 0 : 1).ThenBy(p => p.SortOrder)
+            .FirstOrDefault()?.ImageUrl,
         Bio: artist.Bio is null ? null : (artist.Bio.Length > 100 ? artist.Bio[..100] : artist.Bio),
         Styles: artist.ArtistStyles.Select(style => style.Style.Slug).ToList(),
         ArtistType: artist.ArtistType.ToString().ToLowerInvariant(),
@@ -151,6 +156,7 @@ public class ArtistQueryService
         MinSessionPrice: artist.MinSessionPrice,
         HourlyRate: artist.HourlyRate,
         IsCertified: artist.Certifications.Any(certification => certification.IsActive),
+        HasAwards: artist.Awards.Any(),
         AverageRating: artist.RatingAvg,
         ReviewCount: artist.TotalReviews,
         SponsorBadges: artist.Sponsorships

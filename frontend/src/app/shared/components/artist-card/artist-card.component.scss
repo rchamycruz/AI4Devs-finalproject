@@ -108,6 +108,12 @@
       height: 16px;
       width: 16px;
     }
+
+    &--award {
+      top: 8px;
+      right: 36px;
+      color: var(--ink-accent);
+    }
   }
 
   &__body {
