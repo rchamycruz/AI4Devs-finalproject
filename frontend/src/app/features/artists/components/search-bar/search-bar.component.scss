@@ -62,11 +62,8 @@
   }
 
   &__dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    z-index: 200;
+    position: fixed;
+    z-index: 9999;
     background: var(--ink-surface);
     border: 1px solid var(--ink-border);
     border-radius: 8px;

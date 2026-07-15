@@ -1,6 +1,7 @@
 <div class="search-bar">
   <span class="search-bar__icon material-icons">search</span>
   <input
+    #searchInput
     class="search-bar__input"
     type="text"
     placeholder="Busca por nombre, estilo o ciudad..."
@@ -21,7 +22,7 @@
 </div>
 
 @if (showDropdown() && suggestions()) {
-  <div class="search-bar__dropdown">
+  <div class="search-bar__dropdown" [ngStyle]="dropdownStyle()">
     @if (suggestions()!.styles.length > 0) {
       <div class="search-bar__section">
         <span class="search-bar__section-title">Estilos</span>

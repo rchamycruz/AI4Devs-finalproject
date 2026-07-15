@@ -4,9 +4,11 @@ import {
   DestroyRef,
   ElementRef,
   HostListener,
+  ViewChild,
   inject,
   signal
 } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
@@ -18,6 +20,7 @@ import { ArtistFilterService } from '../../services/artist-filter.service';
 @Component({
   selector: 'app-search-bar',
   standalone: true,
+  imports: [NgStyle],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,9 +31,14 @@ export class SearchBarComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly elementRef = inject(ElementRef);
 
+  @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
+
   readonly searchText = signal('');
   readonly showDropdown = signal(false);
   readonly suggestions = signal<ArtistSuggestionsResponse | null>(null);
+  readonly dropdownStyle = signal<{ top: string; left: string; width: string }>({
+    top: '0px', left: '0px', width: '0px'
+  });
 
   private readonly searchSubject = new Subject<string>();
   private readonly suggestionsSubject = new Subject<string>();
@@ -67,6 +75,7 @@ export class SearchBarComponent {
     ).subscribe((response) => {
       this.suggestions.set(response);
       if (response.styles.length > 0 || response.communes.length > 0) {
+        this.updateDropdownPosition();
         this.showDropdown.set(true);
       }
     });
@@ -76,6 +85,14 @@ export class SearchBarComponent {
   onDocumentClick(event: Event): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.showDropdown.set(false);
+    }
+  }
+
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  onViewportChange(): void {
+    if (this.showDropdown()) {
+      this.updateDropdownPosition();
     }
   }
 
@@ -107,5 +124,15 @@ export class SearchBarComponent {
   getStyleName(slug: string): string {
     const style = TATTOO_STYLES.find((s) => s.slug === slug);
     return style ? style.name : slug;
+  }
+
+  private updateDropdownPosition(): void {
+    const hostEl: HTMLElement = this.elementRef.nativeElement;
+    const rect = hostEl.getBoundingClientRect();
+    this.dropdownStyle.set({
+      top: `${rect.bottom + 4}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`
+    });
   }
 }
