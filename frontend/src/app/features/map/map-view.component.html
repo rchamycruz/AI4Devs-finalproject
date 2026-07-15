@@ -1,0 +1,168 @@
+<div class="map-page">
+  <!-- Header controls -->
+  <div class="map-controls">
+    <div class="controls-left">
+      <mat-button-toggle-group
+        [value]="viewMode()"
+        (change)="onViewModeChange($event)"
+        class="view-toggle"
+      >
+        <mat-button-toggle value="map">
+          <mat-icon>map</mat-icon>
+          <span class="toggle-label">Mapa</span>
+        </mat-button-toggle>
+        <mat-button-toggle value="list">
+          <mat-icon>list</mat-icon>
+          <span class="toggle-label">Lista</span>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div class="radius-selector">
+        <span class="radius-label">Radio:</span>
+        @for (option of radiusOptions; track option.value) {
+          <button
+            class="radius-btn"
+            [class.active]="selectedRadius() === option.value"
+            (click)="onRadiusChange(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="controls-right">
+      <button class="filter-toggle-btn" (click)="toggleFilters()">
+        <mat-icon>tune</mat-icon>
+        <span>Filtros</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter panel (collapsible) -->
+  @if (showFilters()) {
+    <div class="filter-drawer">
+      <div class="filter-section">
+        <h4 class="filter-title">Estilos</h4>
+        <div class="filter-chips">
+          @for (style of tattooStyles; track style.slug) {
+            <button
+              class="chip"
+              [class.active]="selectedStyles().includes(style.slug)"
+              (click)="onStyleToggle(style.slug, !selectedStyles().includes(style.slug))"
+            >
+              {{ style.name }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h4 class="filter-title">Calificación mínima</h4>
+        <div class="rating-buttons">
+          @for (rating of [1, 2, 3, 4, 5]; track rating) {
+            <button
+              class="rating-btn"
+              [class.active]="minRating() === rating"
+              (click)="onMinRatingChange(rating)"
+            >
+              {{ rating }}★
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h4 class="filter-title">Opciones</h4>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [checked]="certifiedOnly() === true"
+            (change)="onCertifiedChange($any($event.target).checked)"
+          />
+          <span>Solo certificados</span>
+        </label>
+      </div>
+
+      <div class="filter-section">
+        <h4 class="filter-title">Tipo de artista</h4>
+        <div class="type-buttons">
+          <button
+            class="type-btn"
+            [class.active]="artistType() === null"
+            (click)="onArtistTypeChange(null)"
+          >
+            Todos
+          </button>
+          <button
+            class="type-btn"
+            [class.active]="artistType() === 'independent'"
+            (click)="onArtistTypeChange('independent')"
+          >
+            Independiente
+          </button>
+          <button
+            class="type-btn"
+            [class.active]="artistType() === 'studio'"
+            (click)="onArtistTypeChange('studio')"
+          >
+            Estudio
+          </button>
+        </div>
+      </div>
+
+      <button class="clear-btn" (click)="clearAllFilters()">Limpiar filtros</button>
+    </div>
+  }
+
+  <!-- Main content -->
+  <div class="map-content">
+    <!-- Map view -->
+    @if (viewMode() === 'map') {
+      <div class="map-wrapper">
+        @if (locationLoading()) {
+          <div class="map-loading">
+            <mat-spinner diameter="48"></mat-spinner>
+            <p>Obteniendo tu ubicación...</p>
+          </div>
+        }
+        <div #mapContainer class="map-container"></div>
+      </div>
+    }
+
+    <!-- List view -->
+    @if (viewMode() === 'list') {
+      <div class="list-wrapper">
+        @if (loading()) {
+          <div class="list-loading">
+            <mat-spinner diameter="48"></mat-spinner>
+          </div>
+        } @else if (error()) {
+          <div class="list-error">
+            <mat-icon>error_outline</mat-icon>
+            <p>{{ error() }}</p>
+          </div>
+        } @else if (artistList().length === 0) {
+          <div class="list-empty">
+            <mat-icon>location_off</mat-icon>
+            <p>No se encontraron artistas en esta zona.</p>
+            <p class="list-empty-hint">Prueba ampliando el radio de búsqueda o ajustando los filtros.</p>
+          </div>
+        } @else {
+          <div class="artist-grid">
+            @for (artist of artistList(); track artist.id) {
+              <app-artist-card [artist]="artist"></app-artist-card>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Results count -->
+  @if (!loading() && artists()) {
+    <div class="results-count">
+      {{ artistList().length }} artista{{ artistList().length !== 1 ? 's' : '' }} encontrado{{ artistList().length !== 1 ? 's' : '' }}
+    </div>
+  }
+</div>
