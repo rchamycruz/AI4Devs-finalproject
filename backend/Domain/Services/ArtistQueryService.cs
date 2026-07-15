@@ -158,6 +158,98 @@ public class ArtistQueryService
             .Select(sponsorship => new SponsorBadgeDto(sponsorship.BrandName, sponsorship.BrandLogoUrl))
             .ToList());
 
+    public async Task<ArtistProfileDto?> GetArtistBySlugAsync(string slug)
+    {
+        var artist = await _context.ArtistProfiles
+            .Where(a => a.Slug == slug && a.IsPublished)
+            .Include(a => a.User)
+            .Include(a => a.ArtistStyles).ThenInclude(s => s.Style)
+            .Include(a => a.PortfolioItems).ThenInclude(p => p.Style)
+            .Include(a => a.Certifications)
+            .Include(a => a.Awards)
+            .Include(a => a.Sponsorships.Where(s => s.IsActive))
+            .Include(a => a.Availabilities.Where(av => av.IsActive))
+            .AsSplitQuery()
+            .FirstOrDefaultAsync();
+
+        if (artist is null)
+            return null;
+
+        return new ArtistProfileDto(
+            Id: artist.Id,
+            ArtistName: $"{artist.User.FirstName} {artist.User.LastName}",
+            Slug: artist.Slug,
+            ProfilePhotoUrl: artist.User.AvatarUrl,
+            Bio: artist.Bio,
+            YearsExperience: artist.YearsExperience,
+            ArtistType: artist.ArtistType.ToString().ToLowerInvariant(),
+            Commune: artist.Commune,
+            Latitude: artist.Latitude,
+            Longitude: artist.Longitude,
+            Address: artist.Address,
+            MinSessionPrice: artist.MinSessionPrice,
+            HourlyRate: artist.HourlyRate,
+            DepositPercentage: artist.DepositPercentage,
+            CancellationPolicy: artist.CancellationPolicy.ToString().ToLowerInvariant(),
+            IsCertified: artist.Certifications.Any(c => c.IsActive),
+            AverageRating: artist.RatingAvg,
+            ReviewCount: artist.TotalReviews,
+            Styles: artist.ArtistStyles.Select(s => s.Style.Slug).ToList(),
+            PortfolioItems: artist.PortfolioItems
+                .OrderBy(p => p.SortOrder)
+                .Select(p => new PortfolioItemDto(p.Id, p.ImageUrl, p.ThumbnailUrl, p.Style.Slug, p.IsFeatured, p.SortOrder))
+                .ToList(),
+            Certifications: artist.Certifications
+                .Select(c => new CertificationDto(c.Type.ToString().ToLowerInvariant(), c.Name, c.Issuer, c.ValidUntil, c.IsActive))
+                .ToList(),
+            Awards: artist.Awards
+                .OrderByDescending(a => a.Year)
+                .Select(a => new AwardDto(a.Title, a.EventName, a.Year, a.Category, a.BadgeIconUrl))
+                .ToList(),
+            SponsorBadges: artist.Sponsorships
+                .Select(s => new SponsorBadgeDto(s.BrandName, s.BrandLogoUrl))
+                .ToList(),
+            AvailableSlots: artist.Availabilities
+                .Select(a => new AvailableSlotDto(a.DayOfWeek, a.StartTime.ToString("HH:mm"), a.EndTime.ToString("HH:mm"), a.SlotDurationMinutes))
+                .ToList());
+    }
+
+    public async Task<ReviewListResponse?> GetArtistReviewsAsync(string slug, int page, int pageSize)
+    {
+        var artist = await _context.ArtistProfiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Slug == slug && a.IsPublished);
+
+        if (artist is null)
+            return null;
+
+        var query = _context.Reviews
+            .Where(r => r.ArtistProfileId == artist.Id)
+            .AsNoTracking();
+
+        var total = await query.CountAsync();
+
+        var reviews = await query
+            .OrderByDescending(r => r.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(r => r.Client)
+            .Select(r => new ReviewDto(
+                r.Id,
+                r.Client.FirstName,
+                r.RatingHygiene,
+                r.RatingPainManagement,
+                r.RatingCustomerService,
+                r.RatingResult,
+                Math.Round((r.RatingHygiene + r.RatingPainManagement + r.RatingCustomerService + r.RatingResult) / 4.0m, 2),
+                r.Comment,
+                r.TattooPhotoUrl,
+                r.CreatedAt))
+            .ToListAsync();
+
+        return new ReviewListResponse(reviews, total, page, pageSize);
+    }
+
     public async Task<ArtistSuggestionsResponse> GetSuggestionsAsync(string q)
     {
         if (string.IsNullOrWhiteSpace(q) || q.Trim().Length < 2)
