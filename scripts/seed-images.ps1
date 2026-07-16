@@ -106,10 +106,12 @@ foreach ($slug in $Artists) {
     }
 }
 
-Write-Host "`nLogo de marca..." -ForegroundColor Yellow
-Upload-Image `
-    -SourceUrl "https://picsum.photos/seed/eternal-ink/200/80" `
-    -DestPath "brands/eternal-ink.png"
+Write-Host "`nLogos de marca..." -ForegroundColor Yellow
+foreach ($brand in @('eternal-ink', 'cheyenne', 'dynamic-color')) {
+    Upload-Image `
+        -SourceUrl "https://picsum.photos/seed/$brand/200/80" `
+        -DestPath "brands/$brand.png"
+}
 
 Write-Host "`n✅ Seed de imágenes completado." -ForegroundColor Green
 Write-Host "Puedes verificar en http://localhost:9001 (usuario: minioadmin / minioadmin)"
