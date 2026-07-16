@@ -1,7 +1,7 @@
 # PROJECT_STATUS — INK·LINK
 
 > Estado actual del proyecto. **Este documento debe actualizarse al cerrar cada Historia de Usuario o hito.**
-> Última actualización: 2026-07-16 (US0012 ✅ PR #16 mergeada; US0014 🟣 En revisión — PR pendiente)
+> Última actualización: 2026-07-16 (US0012 ✅ PR #16 mergeada; US0014 🟣 En revisión — PR #17)
 > **Traspaso entre sesiones/IAs**: ver `HANDOFF.md` (prompt de continuación + protocolo de registro de avance)
 
 ## Resumen
@@ -33,7 +33,7 @@
 | US0011 | Cotizar con chatbot | Should | 13 | ⬜ Pendiente |
 | US0012 | Explorar artistas en mapa | Should | 8 | ✅ Done (PR #16 mergeado a main) |
 | US0013 | Calificar artista post-sesión | Should | 5 | ✅ Done (PR #15 mergeado a main) |
-| US0014 | Mostrar auspicios de marcas | Should | 2 | 🟣 En revisión (feature/us0014-auspicios-marcas) |
+| US0014 | Mostrar auspicios de marcas | Should | 2 | 🟣 En revisión (feature/us0014-auspicios-marcas, PR #17) |
 
 Estados posibles: ⬜ Pendiente · 🔵 En desarrollo · 🟣 En revisión · ✅ Done (según Definition of Done de `CONTRIBUTING.md`)
 
@@ -63,6 +63,6 @@ Estados posibles: ⬜ Pendiente · 🔵 En desarrollo · 🟣 En revisión · �
 
 ## Próximos pasos
 
-1. **US0014** — revisar y mergear el PR de `feature/us0014-auspicios-marcas`
+1. **US0014** — revisar y mergear PR #17 (`feature/us0014-auspicios-marcas`)
 2. Última Should-Have restante: **US0011** (cotizar con chatbot, 13 SP)
 3. **Pendiente deferred**: integración Flow real con sandbox (ver Bloqueos §3) · `fix-search-dropdown` (dropdown sugerencias se superpone con `Resultados`) · `fixs/issue-005.md` (foto de reseña no se persiste)
