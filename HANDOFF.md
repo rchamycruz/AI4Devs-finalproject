@@ -50,13 +50,13 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
 ### Dónde quedamos
 
 - ✅ **Fase 0**, **US0001**, **US0003–US0010**, **US0012–US0014** mergeadas a `main` (PRs #1–#17). Las **9 Must-Have (52 SP) están completas**.
-- 🟣 **US0011 en revisión** — rama `feature/us0011-chatbot-cotizador` (última US del backlog):
+- 🟣 **US0011 en revisión** — rama `feature/us0011-chatbot-cotizador`, **PR #18 abierto** (última US del backlog):
   - **Decisión previa** (`fixs/issue-007.md`, CA9): el depósito deja de ser fijo — si la reserva viene de una cotización, el hold recalcula la fórmula server-side y deposit = deposit_percentage × máx(mínimo cotizado, min_session_price). Sin cotización, fallback 30% × min_session_price.
   - **Backend**: `QuoteCalculatorService` (fuente única de la fórmula: base = max(min, hourly × horas por tamaño coin/palm/hand/arm = 1/2/4/6h); factores multiplicativos cover-up +30%, color +20%, zona difícil +15%; rango [×0.8, ×1.3]) · `POST /api/quotes/calculate` (público, 404/422) · `GET /api/styles` (catálogo id/name/slug, nuevo en api-spec) · hold de US0008 integra la cotización.
   - **Frontend**: `QuoteChatbotComponent` (overlay 5 pasos, conversación derivada del estado → atrás = limpiar respuesta) + `QuoteService` (draft en memoria + localStorage si autenticado; el hold del perfil adjunta el draft). CTAs del hero "Cotizar"/"Reservar" ahora funcionales.
   - **Verificado e2e en dev**: cotización costillas+color+mano con Matías → rango $264.960–$430.560, depósito $79.488 heredado por el resumen de reserva (antes: $24.000 fijo).
   - ⚠️ **Limitación conocida**: las imágenes de referencia del paso 4 solo tienen preview local — el upload a Object Storage sigue pendiente (misma limitación mock-first que `fixs/issue-005.md`).
-- Siguiente: mergear el PR de US0011 → **backlog completo (13 US / 80 SP)**. Luego: deferred (Flow sandbox, fix-search-dropdown, issue-005, upload referencias) y preparación de la entrega final (readme.md §2–7).
+- Siguiente: mergear PR #18 → **backlog completo (13 US / 80 SP)**. Luego: deferred (Flow sandbox, fix-search-dropdown, issue-005, upload referencias) y preparación de la entrega final (readme.md §2–7).
 - **Rechazo de pago (US0009)**: Payment queda `pending` (el modelo no tiene estado `failed`); el cliente puede reintentar mientras el hold viva y el TTL libera el slot.
 - **Flow real**: ⏸️ deferred por decisión del 2026-07-15 — se seguirá con el mock. Al retomar: obtener credenciales sandbox → `Flow:ApiKey/SecretKey` + `Flow:UseMock=false` + prueba end-to-end contra sandbox.flow.cl. El resto del código no cambia.
 - **Pendiente deferred**: `fix-search-dropdown` (dropdown de sugerencias se superpone con "Resultados").
