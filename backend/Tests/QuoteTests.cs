@@ -159,6 +159,21 @@ public class QuoteTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
+    [Fact]
+    public async Task Styles_Catalog_Returns_Id_Name_And_Slug()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+
+        var styles = await client.GetFromJsonAsync<List<TattooStyleDto>>("/api/styles");
+
+        Assert.NotNull(styles);
+        var style = Assert.Single(styles!);
+        Assert.Equal(_styleId, style.Id);
+        Assert.Equal("Blackwork", style.Name);
+        Assert.Equal("blackwork", style.Slug);
+    }
+
     // ---------- infrastructure ----------
 
     private WebApplicationFactory<Program> CreateFactory() =>

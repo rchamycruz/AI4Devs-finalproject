@@ -16,3 +16,6 @@ public record QuoteResponse(
     string Currency,
     int DepositAmount,
     List<string> Factors);
+
+// Public style catalog (GET /api/styles) — used by the chatbot to resolve style ids
+public record TattooStyleDto(Guid Id, string Name, string Slug);
