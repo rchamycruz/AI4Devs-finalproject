@@ -1,4 +1,3 @@
-// INK·LINK Design System Variables
 $ink-bg: #0c0c0c;
 $ink-bg-card: #1c1c1c;
 $ink-accent: #c9a446;
@@ -15,7 +14,6 @@ $ink-radius: 12px;
   color: $ink-text-primary;
 }
 
-// Controls header
 .map-controls {
   display: flex;
   justify-content: space-between;
@@ -41,22 +39,30 @@ $ink-radius: 12px;
 }
 
 .view-toggle {
-  ::ng-deep .mat-button-toggle {
-    background: transparent;
-    color: $ink-text-secondary;
-
-    &.mat-button-toggle-checked {
-      background: $ink-accent;
-      color: $ink-bg;
-    }
-  }
+  display: flex;
+  border: 1px solid $ink-border;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.toggle-label {
-  margin-left: 4px;
-  
-  @media (max-width: 480px) {
-    display: none;
+.view-btn {
+  padding: 0.45rem 1rem;
+  background: transparent;
+  border: none;
+  color: $ink-text-secondary;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &.active {
+    background: $ink-accent;
+    color: $ink-bg;
+  }
+
+  &:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
+    color: $ink-text-primary;
   }
 }
 
@@ -82,9 +88,7 @@ $ink-radius: 12px;
   font-size: 13px;
   transition: all 0.2s ease;
 
-  &:hover {
-    border-color: $ink-accent;
-  }
+  &:hover { border-color: $ink-accent; }
 
   &.active {
     background: $ink-accent;
@@ -106,18 +110,9 @@ $ink-radius: 12px;
   font-size: 14px;
   transition: all 0.2s ease;
 
-  &:hover {
-    border-color: $ink-accent;
-  }
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+  &:hover { border-color: $ink-accent; }
 }
 
-// Filter drawer
 .filter-drawer {
   display: flex;
   flex-wrap: wrap;
@@ -127,9 +122,7 @@ $ink-radius: 12px;
   border-bottom: 1px solid $ink-border;
 }
 
-.filter-section {
-  min-width: 200px;
-}
+.filter-section { min-width: 200px; }
 
 .filter-title {
   margin: 0 0 12px;
@@ -156,9 +149,7 @@ $ink-radius: 12px;
   font-size: 13px;
   transition: all 0.2s ease;
 
-  &:hover {
-    border-color: $ink-accent;
-  }
+  &:hover { border-color: $ink-accent; }
 
   &.active {
     background: rgba($ink-accent, 0.15);
@@ -167,16 +158,8 @@ $ink-radius: 12px;
   }
 }
 
-.rating-buttons,
-.type-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.rating-btn,
-.type-btn {
-  @extend .chip;
-}
+.rating-buttons, .type-buttons { display: flex; gap: 8px; }
+.rating-btn, .type-btn { @extend .chip; }
 
 .checkbox-label {
   display: flex;
@@ -201,12 +184,9 @@ $ink-radius: 12px;
   font-size: 14px;
   text-decoration: underline;
 
-  &:hover {
-    text-decoration: none;
-  }
+  &:hover { text-decoration: none; }
 }
 
-// Main content
 .map-content {
   flex: 1;
   position: relative;
@@ -218,14 +198,13 @@ $ink-radius: 12px;
   flex: 1;
   position: relative;
   min-height: 500px;
+
+  &--hidden { display: none; }
 }
 
 .map-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   z-index: 1;
 }
 
@@ -234,49 +213,50 @@ $ink-radius: 12px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  background: rgba($ink-bg, 0.9);
-  padding: 32px;
-  border-radius: $ink-radius;
+  gap: 0.75rem;
+  z-index: 1000;
+  color: $ink-text-secondary;
+  font-size: 0.875rem;
 
-  p {
-    margin: 0;
-    color: $ink-text-secondary;
+  &__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid $ink-border;
+    border-top-color: $ink-accent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
 }
 
-// List view
+@keyframes spin { to { transform: rotate(360deg); } }
+
 .list-wrapper {
   flex: 1;
   padding: 24px;
   min-height: 400px;
 }
 
-.list-loading,
-.list-error,
-.list-empty {
+.list-loading, .list-error, .list-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  gap: 16px;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
   color: $ink-text-secondary;
 
-  mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    opacity: 0.5;
-  }
+  p { margin: 0; }
+}
 
-  p {
-    margin: 0;
-  }
+.list-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid $ink-border;
+  border-top-color: $ink-accent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 .list-empty-hint {
@@ -290,7 +270,6 @@ $ink-radius: 12px;
   gap: 24px;
 }
 
-// Results count
 .results-count {
   padding: 12px 24px;
   background: $ink-bg-card;
@@ -300,12 +279,8 @@ $ink-radius: 12px;
   text-align: center;
 }
 
-// Custom Leaflet marker styles
 :host ::ng-deep {
-  .artist-marker {
-    background: transparent;
-    border: none;
-  }
+  .artist-marker { background: transparent; border: none; }
 
   .artist-marker-inner {
     width: 44px;
@@ -320,20 +295,11 @@ $ink-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     transition: transform 0.2s ease;
 
-    &:hover {
-      transform: scale(1.1);
-    }
-
-    &.certified {
-      border-color: #4caf50;
-    }
+    &:hover { transform: scale(1.1); }
+    &.certified { border-color: #4caf50; }
   }
 
-  .marker-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .marker-photo { width: 100%; height: 100%; object-fit: cover; }
 
   .marker-initials {
     font-size: 14px;
@@ -341,43 +307,25 @@ $ink-radius: 12px;
     color: $ink-text-primary;
   }
 
-  // Popup styles
   .leaflet-popup-content-wrapper {
     background: $ink-bg-card;
     border-radius: $ink-radius;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
 
-  .leaflet-popup-content {
-    margin: 0;
-    width: 100% !important;
-  }
-
-  .leaflet-popup-tip {
-    background: $ink-bg-card;
-  }
+  .leaflet-popup-content { margin: 0; width: 100% !important; }
+  .leaflet-popup-tip { background: $ink-bg-card; }
 
   .leaflet-popup-close-button {
     color: $ink-text-secondary !important;
-    
-    &:hover {
-      color: $ink-text-primary !important;
-    }
+    &:hover { color: $ink-text-primary !important; }
   }
 
-  .popup-content {
-    padding: 16px;
-    color: $ink-text-primary;
-  }
+  .popup-content { padding: 16px; color: $ink-text-primary; }
 
-  .popup-header {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
+  .popup-header { display: flex; gap: 12px; margin-bottom: 12px; }
 
-  .popup-photo,
-  .popup-photo-placeholder {
+  .popup-photo, .popup-photo-placeholder {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -395,10 +343,7 @@ $ink-radius: 12px;
     color: $ink-bg;
   }
 
-  .popup-info {
-    flex: 1;
-    min-width: 0;
-  }
+  .popup-info { flex: 1; min-width: 0; }
 
   .popup-name {
     margin: 0 0 4px;
@@ -412,25 +357,10 @@ $ink-radius: 12px;
   .popup-rating {
     margin-bottom: 4px;
     font-size: 13px;
-
-    .stars {
-      color: $ink-accent;
-    }
-
-    .rating-value {
-      font-weight: 500;
-    }
-
-    .rating-count {
-      color: $ink-text-secondary;
-    }
+    .stars { color: $ink-accent; }
   }
 
-  .popup-style,
-  .popup-commune {
-    font-size: 13px;
-    color: $ink-text-secondary;
-  }
+  .popup-meta { font-size: 13px; color: $ink-text-secondary; }
 
   .popup-price {
     padding: 8px 0;
@@ -441,11 +371,7 @@ $ink-radius: 12px;
     font-weight: 500;
   }
 
-  .popup-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-  }
+  .popup-actions { display: flex; gap: 8px; margin-top: 12px; }
 
   .popup-btn {
     flex: 1;
@@ -461,52 +387,26 @@ $ink-radius: 12px;
       background: transparent;
       border: 1px solid $ink-border;
       color: $ink-text-primary;
-
-      &:hover {
-        border-color: $ink-accent;
-      }
+      &:hover { border-color: $ink-accent; }
     }
 
     &--book {
       background: $ink-accent;
       border: 1px solid $ink-accent;
       color: $ink-bg;
-
-      &:hover {
-        background: darken($ink-accent, 5%);
-      }
+      &:hover { background: darken($ink-accent, 5%); }
     }
   }
 
-  // Cluster styles
-  .marker-cluster-small,
-  .marker-cluster-medium,
-  .marker-cluster-large {
+  .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
     background: rgba($ink-accent, 0.6);
-
-    div {
-      background: $ink-accent;
-      color: $ink-bg;
-      font-weight: 600;
-    }
+    div { background: $ink-accent; color: $ink-bg; font-weight: 600; }
   }
 }
 
-// Responsive
 @media (max-width: 768px) {
-  .map-controls {
-    padding: 12px 16px;
-  }
-
-  .filter-drawer {
-    padding: 12px 16px;
-  }
-
-  .list-wrapper {
-    padding: 16px;
-  }
-
-  .artist-grid {
-    grid-template-columns: 1fr;
-  }
+  .map-controls { padding: 12px 16px; }
+  .filter-drawer { padding: 12px 16px; }
+  .list-wrapper { padding: 16px; }
+  .artist-grid { grid-template-columns: 1fr; }
 }

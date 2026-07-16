@@ -23,6 +23,12 @@ describe('MapViewComponent', () => {
     fixture = TestBed.createComponent(MapViewComponent);
     component = fixture.componentInstance;
     mapService = TestBed.inject(MapService);
+    // Prevent Leaflet initialization in test environment (no real DOM map)
+    spyOn(component as any, 'initializeMap').and.returnValue(undefined);
+    spyOn(component as any, 'requestUserLocation').and.callFake(() => {
+      (component as any).userLocation.set({ lat: -33.4489, lng: -70.6693 });
+      (component as any).locationLoading.set(false);
+    });
     fixture.detectChanges();
   });
 
@@ -33,10 +39,10 @@ describe('MapViewComponent', () => {
   it('should toggle between map and list view', () => {
     expect(component.viewMode()).toBe('map');
 
-    component.onViewModeChange({ value: 'list' } as any);
+    component.setViewMode('list');
     expect(component.viewMode()).toBe('list');
 
-    component.onViewModeChange({ value: 'map' } as any);
+    component.setViewMode('map');
     expect(component.viewMode()).toBe('map');
   });
 

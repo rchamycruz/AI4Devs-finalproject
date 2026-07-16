@@ -12,9 +12,6 @@ import {
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
 import * as L from 'leaflet';
@@ -23,10 +20,8 @@ import { environment } from '../../../environments/environment';
 import { GeoFilters, TATTOO_STYLES } from '../../core/models/artist-filter.models';
 import { ArtistCard } from '../../core/models/showcase.models';
 import { ArtistCardComponent } from '../../shared/components/artist-card/artist-card.component';
-import { FilterPanelComponent } from '../artists/components/filter-panel/filter-panel.component';
 import { MapService } from './map.service';
 
-// Fix Leaflet default marker icon paths (use CDN URLs instead of imports)
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)['_getIconUrl'];
 L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -34,10 +29,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
 });
 
-interface RadiusOption {
-  value: number;
-  label: string;
-}
+interface RadiusOption { value: number; label: string; }
 
 const RADIUS_OPTIONS: RadiusOption[] = [
   { value: 1, label: '1 km' },
@@ -52,14 +44,7 @@ const DEFAULT_ZOOM = 13;
 @Component({
   selector: 'app-map-view',
   standalone: true,
-  imports: [
-    RouterLink,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    ArtistCardComponent,
-    FilterPanelComponent
-  ],
+  imports: [RouterLink, ArtistCardComponent],
   templateUrl: './map-view.component.html',
   styleUrl: './map-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -84,10 +69,7 @@ export class MapViewComponent implements OnInit, AfterViewInit {
   readonly locationLoading = signal(true);
   readonly showFilters = signal(false);
 
-  // Filters from the filter panel (reuse partial filters)
   readonly selectedStyles = signal<string[]>([]);
-  readonly minPrice = signal<number | undefined>(undefined);
-  readonly maxPrice = signal<number | undefined>(undefined);
   readonly minRating = signal<number | undefined>(undefined);
   readonly certifiedOnly = signal<boolean | undefined>(undefined);
   readonly artistType = signal<'independent' | 'studio' | null>(null);
@@ -95,16 +77,13 @@ export class MapViewComponent implements OnInit, AfterViewInit {
   readonly artists = this.mapService.artists;
   readonly loading = this.mapService.loading;
   readonly error = this.mapService.error;
-
   readonly artistList = computed(() => this.artists()?.data ?? []);
 
   constructor() {
-    // React to filter changes with debounce
     this.filterChange$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.loadArtists());
 
-    // React to artist data changes to update markers
     effect(() => {
       const data = this.artistList();
       if (this.map && this.markerClusterGroup) {
@@ -113,20 +92,13 @@ export class MapViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
-    this.requestUserLocation();
-  }
+  ngOnInit(): void { this.requestUserLocation(); }
 
-  ngAfterViewInit(): void {
-    this.initializeMap();
-  }
+  ngAfterViewInit(): void { this.initializeMap(); }
 
-  onViewModeChange(event: MatButtonToggleChange): void {
-    this.viewMode.set(event.value);
-    if (event.value === 'map') {
-      // Invalidate map size after switching back to map view
-      setTimeout(() => this.map?.invalidateSize(), 100);
-    }
+  setViewMode(mode: 'map' | 'list'): void {
+    this.viewMode.set(mode);
+    if (mode === 'map') setTimeout(() => this.map?.invalidateSize(), 100);
   }
 
   onRadiusChange(radius: number): void {
@@ -135,22 +107,16 @@ export class MapViewComponent implements OnInit, AfterViewInit {
     this.updateMapZoom(radius);
   }
 
-  toggleFilters(): void {
-    this.showFilters.update((v) => !v);
-  }
+  toggleFilters(): void { this.showFilters.update(v => !v); }
 
   onStyleToggle(slug: string, checked: boolean): void {
-    const current = this.selectedStyles();
-    const next = checked
-      ? [...current, slug]
-      : current.filter((s) => s !== slug);
-    this.selectedStyles.set(next);
+    const c = this.selectedStyles();
+    this.selectedStyles.set(checked ? [...c, slug] : c.filter(s => s !== slug));
     this.filterChange$.next();
   }
 
-  onMinRatingChange(rating: number): void {
-    const current = this.minRating();
-    this.minRating.set(current === rating ? undefined : rating);
+  onMinRatingChange(r: number): void {
+    this.minRating.set(this.minRating() === r ? undefined : r);
     this.filterChange$.next();
   }
 
@@ -166,8 +132,6 @@ export class MapViewComponent implements OnInit, AfterViewInit {
 
   clearAllFilters(): void {
     this.selectedStyles.set([]);
-    this.minPrice.set(undefined);
-    this.maxPrice.set(undefined);
     this.minRating.set(undefined);
     this.certifiedOnly.set(undefined);
     this.artistType.set(null);
@@ -175,89 +139,53 @@ export class MapViewComponent implements OnInit, AfterViewInit {
   }
 
   private initializeMap(): void {
-    // Guard: only initialize if the container exists (map view is shown)
-    if (!this.mapContainer?.nativeElement) return;
-    
-    const center = this.userLocation() ?? { lat: SANTIAGO_CENTER[0], lng: SANTIAGO_CENTER[1] };
-    
-    this.map = L.map(this.mapContainer.nativeElement, {
-      center: [center.lat, center.lng],
-      zoom: DEFAULT_ZOOM,
-      zoomControl: true
-    });
+    const container = this.mapContainer?.nativeElement;
+    if (!container) return;
+
+    this.map = L.map(container, { center: SANTIAGO_CENTER, zoom: DEFAULT_ZOOM, zoomControl: true });
 
     L.tileLayer(environment.mapTileUrl, {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19
     }).addTo(this.map);
 
-    this.markerClusterGroup = L.markerClusterGroup({
+    this.markerClusterGroup = (L as any).markerClusterGroup({
       showCoverageOnHover: false,
       maxClusterRadius: 50,
       spiderfyOnMaxZoom: true
     });
-    this.map.addLayer(this.markerClusterGroup);
-
-    // Add user location marker if available
-    const loc = this.userLocation();
-    if (loc) {
-      this.addUserMarker(loc);
-    }
+    if (this.markerClusterGroup) this.map.addLayer(this.markerClusterGroup);
   }
 
   private requestUserLocation(): void {
-    if (!navigator.geolocation) {
-      this.locationLoading.set(false);
-      this.useDefaultLocation();
-      return;
-    }
+    if (!navigator.geolocation) { this.locationLoading.set(false); this.useDefaultLocation(); return; }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const loc = { lat: position.coords.latitude, lng: position.coords.longitude };
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         this.userLocation.set(loc);
         this.locationLoading.set(false);
-        
-        if (this.map) {
-          this.map.setView([loc.lat, loc.lng], DEFAULT_ZOOM);
-          this.addUserMarker(loc);
-        }
-        
+        this.map?.setView([loc.lat, loc.lng], DEFAULT_ZOOM);
+        this.addUserMarker(loc);
         this.loadArtists();
       },
-      () => {
-        this.locationLoading.set(false);
-        this.useDefaultLocation();
-      },
+      () => { this.locationLoading.set(false); this.useDefaultLocation(); },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   }
 
   private useDefaultLocation(): void {
-    const defaultLoc = { lat: SANTIAGO_CENTER[0], lng: SANTIAGO_CENTER[1] };
-    this.userLocation.set(defaultLoc);
-    
-    if (this.map) {
-      this.map.setView([defaultLoc.lat, defaultLoc.lng], DEFAULT_ZOOM);
-    }
-    
+    const loc = { lat: SANTIAGO_CENTER[0], lng: SANTIAGO_CENTER[1] };
+    this.userLocation.set(loc);
+    this.map?.setView([loc.lat, loc.lng], DEFAULT_ZOOM);
     this.loadArtists();
   }
 
   private addUserMarker(loc: L.LatLngLiteral): void {
-    if (this.userMarker) {
-      this.map?.removeLayer(this.userMarker);
-    }
-    
+    if (this.userMarker) this.map?.removeLayer(this.userMarker);
     this.userMarker = L.circleMarker([loc.lat, loc.lng], {
-      radius: 10,
-      fillColor: '#c9a446',
-      color: '#fff',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.9
+      radius: 10, fillColor: '#c9a446', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.9
     }).addTo(this.map!);
-    
     this.userMarker.bindTooltip('Tu ubicación', { permanent: false, direction: 'top' });
   }
 
@@ -265,18 +193,11 @@ export class MapViewComponent implements OnInit, AfterViewInit {
     const loc = this.userLocation();
     if (!loc) return;
 
-    const filters: GeoFilters = {
-      lat: loc.lat,
-      lng: loc.lng,
-      radiusKm: this.selectedRadius()
-    };
-
+    const filters: GeoFilters = { lat: loc.lat, lng: loc.lng, radiusKm: this.selectedRadius() };
     const styles = this.selectedStyles();
     if (styles.length > 0) filters.styles = styles;
-    if (this.minPrice()) filters.minPrice = this.minPrice();
-    if (this.maxPrice()) filters.maxPrice = this.maxPrice();
-    if (this.minRating()) filters.minRating = this.minRating();
-    if (this.certifiedOnly()) filters.certified = this.certifiedOnly();
+    if (this.minRating() != null) filters.minRating = this.minRating();
+    if (this.certifiedOnly() != null) filters.certified = this.certifiedOnly();
     if (this.artistType()) filters.type = this.artistType();
 
     this.mapService.loadArtistsByLocation(filters);
@@ -284,105 +205,57 @@ export class MapViewComponent implements OnInit, AfterViewInit {
 
   private updateMarkers(artists: ArtistCard[]): void {
     if (!this.markerClusterGroup) return;
-
     this.markerClusterGroup.clearLayers();
-
-    artists.forEach((artist) => {
-      if (artist.latitude == null || artist.longitude == null) return;
-
-      const marker = this.createArtistMarker(artist);
-      this.markerClusterGroup!.addLayer(marker);
+    artists.forEach(a => {
+      if (a.latitude == null || a.longitude == null) return;
+      this.markerClusterGroup!.addLayer(this.createArtistMarker(a));
     });
   }
 
   private createArtistMarker(artist: ArtistCard): L.Marker {
-    const icon = this.createArtistIcon(artist);
-    const marker = L.marker([artist.latitude, artist.longitude], { icon });
+    const initials = artist.artistName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    const inner = artist.profilePhotoUrl
+      ? `<img src="${artist.profilePhotoUrl}" alt="${artist.artistName}" class="marker-photo" />`
+      : `<span class="marker-initials">${initials}</span>`;
 
-    const popupContent = this.createPopupContent(artist);
-    marker.bindPopup(popupContent, {
-      maxWidth: 280,
-      minWidth: 240,
-      className: 'artist-popup'
+    const icon = L.divIcon({
+      className: 'artist-marker',
+      html: `<div class="artist-marker-inner${artist.isCertified ? ' certified' : ''}">${inner}</div>`,
+      iconSize: [44, 44], iconAnchor: [22, 44], popupAnchor: [0, -44]
     });
 
+    const marker = L.marker([artist.latitude, artist.longitude], { icon });
+    marker.bindPopup(this.buildPopup(artist), { maxWidth: 280, minWidth: 240, className: 'artist-popup' });
     return marker;
   }
 
-  private createArtistIcon(artist: ArtistCard): L.DivIcon {
-    const photoUrl = artist.profilePhotoUrl;
-    const initials = artist.artistName
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .slice(0, 2)
-      .toUpperCase();
-
-    const innerHTML = photoUrl
-      ? `<img src="${photoUrl}" alt="${artist.artistName}" class="marker-photo" />`
-      : `<span class="marker-initials">${initials}</span>`;
-
-    return L.divIcon({
-      className: 'artist-marker',
-      html: `<div class="artist-marker-inner${artist.isCertified ? ' certified' : ''}">${innerHTML}</div>`,
-      iconSize: [44, 44],
-      iconAnchor: [22, 44],
-      popupAnchor: [0, -44]
-    });
-  }
-
-  private createPopupContent(artist: ArtistCard): string {
-    const stars = this.renderStars(artist.averageRating);
-    const photo = artist.profilePhotoUrl
-      ? `<img src="${artist.profilePhotoUrl}" alt="${artist.artistName}" class="popup-photo" />`
-      : `<div class="popup-photo-placeholder">${artist.artistName.charAt(0)}</div>`;
-
-    const styleText = artist.styles.length > 0 ? artist.styles[0] : 'Sin estilo';
-    const priceText = artist.minSessionPrice.toLocaleString('es-CL');
-
+  private buildPopup(a: ArtistCard): string {
+    const photo = a.profilePhotoUrl
+      ? `<img src="${a.profilePhotoUrl}" alt="${a.artistName}" class="popup-photo" />`
+      : `<div class="popup-photo-placeholder">${a.artistName.charAt(0)}</div>`;
+    const filled = Math.round(a.averageRating);
+    const stars = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+    const price = a.minSessionPrice.toLocaleString('es-CL');
+    const style = a.styles[0] ?? 'Tatuaje';
     return `
       <div class="popup-content">
-        <div class="popup-header">
-          ${photo}
+        <div class="popup-header">${photo}
           <div class="popup-info">
-            <h4 class="popup-name">${artist.artistName}</h4>
-            <div class="popup-rating">${stars} <span class="rating-count">(${artist.reviewCount})</span></div>
-            <div class="popup-style">${styleText}</div>
-            <div class="popup-commune">${artist.commune}</div>
+            <h4 class="popup-name">${a.artistName}</h4>
+            <div class="popup-rating"><span class="stars">${stars}</span> ${a.averageRating.toFixed(1)}</div>
+            <div class="popup-meta">${style} · ${a.commune}</div>
           </div>
         </div>
-        <div class="popup-price">Desde $${priceText}</div>
+        <div class="popup-price">Desde $${price}</div>
         <div class="popup-actions">
-          <a href="/artista/${artist.slug}" class="popup-btn popup-btn--view">Ver perfil</a>
-          <a href="/artista/${artist.slug}" class="popup-btn popup-btn--book">Reservar</a>
+          <a href="/artista/${a.slug}" class="popup-btn popup-btn--view">Ver perfil</a>
+          <a href="/artista/${a.slug}#reservar" class="popup-btn popup-btn--book">Reservar</a>
         </div>
-      </div>
-    `;
-  }
-
-  private renderStars(rating: number): string {
-    const fullStars = Math.floor(rating);
-    const hasHalf = rating - fullStars >= 0.5;
-    let html = '';
-    
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        html += '★';
-      } else if (i === fullStars && hasHalf) {
-        html += '☆';
-      } else {
-        html += '☆';
-      }
-    }
-    
-    return `<span class="stars">${html}</span> <span class="rating-value">${rating.toFixed(1)}</span>`;
+      </div>`;
   }
 
   private updateMapZoom(radius: number): void {
     if (!this.map) return;
-
-    // Adjust zoom based on radius
-    const zoom = radius === 0 ? 11 : radius === 1 ? 15 : radius === 5 ? 14 : 13;
-    this.map.setZoom(zoom);
+    this.map.setZoom(radius === 0 ? 11 : radius === 1 ? 15 : radius === 5 ? 14 : 13);
   }
 }
