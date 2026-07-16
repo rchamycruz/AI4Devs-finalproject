@@ -405,7 +405,12 @@ components:
           example: CLP
         depositAmount:
           type: integer
-          description: priceMin * artist.deposit_percentage / 100 (CLP)
+          description: max(priceMin, artist.min_session_price) * artist.deposit_percentage / 100 (CLP) — see fixs/issue-007.md
+        factors:
+          type: array
+          description: Human-readable complexity factors applied to the estimate (US0011 CA4)
+          items:
+            type: string
 
     BookingHoldRequest:
       type: object
