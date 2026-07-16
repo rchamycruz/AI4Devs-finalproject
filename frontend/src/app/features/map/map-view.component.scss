@@ -9,7 +9,8 @@ $ink-radius: 12px;
 .map-page {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 64px);
+  height: calc(100vh - 64px);
+  overflow: hidden;
   background: $ink-bg;
   color: $ink-text-primary;
 }
@@ -197,7 +198,8 @@ $ink-radius: 12px;
 .map-wrapper {
   flex: 1;
   position: relative;
-  min-height: 500px;
+  min-height: 0;
+  overflow: hidden;
 
   &--hidden { display: none; }
 }
@@ -236,7 +238,8 @@ $ink-radius: 12px;
 .list-wrapper {
   flex: 1;
   padding: 24px;
-  min-height: 400px;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .list-loading, .list-error, .list-empty {
