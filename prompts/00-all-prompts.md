@@ -1606,4 +1606,16 @@ listo el merge, sigamos con la preparación de la entrega final sin realizar los
 
 ---
 
-*INK·LINK © 2026 · Registro de prompts · 15 sesiones · 95 prompts documentados*
+## 96 — Curar prompts.md para la entrega
+
+> 📋 2026-07-17T02:00:00Z · Claude Code · Claude Fable 5 · medium · ~205K tokens · rodri
+
+```
+sigue con la revisión de prompts.md
+```
+
+*(prompts.md estaba congelado en la Entrega 1 (secciones 2.4/2.5/2.6/6/7 "PENDIENTE"). Completadas con los prompts más representativos de las 15 sesiones (máx 3 por sección, sin eliminar existentes): infraestructura (Fase 0, secretos Flow, seed de imágenes), seguridad (hallazgos de la validación sandbox, webhook firmado), tests (TDD con TestContainers, hermeticidad), API (spec v2.0.0 como fuente de verdad, decisión issue-007), tickets (generación de los 25 tasks) y PRs (protocolo de cierre, US completa en un ciclo, coordinación multi-agente).)*
+
+---
+
+*INK·LINK © 2026 · Registro de prompts · 15 sesiones · 96 prompts documentados*
