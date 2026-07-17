@@ -1473,7 +1473,7 @@ Deja esto de las tarjetas de pruebas en un archivo .md y en el Readme del proyec
 | `docs/flow-sandbox-testing.md` | Creado — guía de pruebas del sandbox |
 | `readme.md` | Actualizado — §2.6 arranque, tests y tarjetas de prueba |
 
-> ⚠️ Nota de trazabilidad: las sesiones que implementaron US0012 (commits `2389366`, `aab2996`, `d9c766b`) y US0013 (PR #15) no quedaron registradas en este archivo; sus prompts no están disponibles desde esta sesión.
+> ⚠️ Nota de trazabilidad: las sesiones que implementaron US0012 (commits `2389366`, `aab2996`, `d9c766b`) y US0013 (PR #15) no quedaron registradas en su momento. ✅ Los prompts de US0012 fueron recuperados después en la **Sesión 14** (87–94, registrados desde GitHub Copilot); los de US0013 siguen sin recuperar.
 
 ---
 
