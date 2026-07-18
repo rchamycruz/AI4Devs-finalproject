@@ -92,6 +92,97 @@ body {
   outline-offset: 2px;
 }
 
+/* Shared design-system utilities (Figma redesign) */
+.gold-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-accent);
+  margin-bottom: 0.75rem;
+}
+
+.btn-gold,
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-gold mat-icon,
+.btn-outline mat-icon { font-size: 15px; width: 15px; height: 15px; }
+
+.btn-gold {
+  background: var(--ink-accent);
+  color: var(--ink-bg);
+  border: none;
+}
+.btn-gold:hover { filter: brightness(1.1); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.btn-outline:hover { color: var(--ink-text-primary); }
+
+.icon-tile {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  flex-shrink: 0;
+}
+.icon-tile mat-icon { font-size: 18px; width: 18px; height: 18px; color: var(--ink-accent); }
+
+.chip-gold,
+.chip-green,
+.chip-violet {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 3px 11px;
+  border: 1px solid;
+}
+.chip-gold mat-icon,
+.chip-green mat-icon,
+.chip-violet mat-icon { font-size: 9px; width: 9px; height: 9px; }
+
+.chip-gold { color: var(--ink-accent); background: rgba(212, 175, 55, 0.08); border-color: rgba(212, 175, 55, 0.2); }
+.chip-green { color: #4ade80; background: rgba(74, 222, 128, 0.07); border-color: rgba(74, 222, 128, 0.18); }
+.chip-violet { color: #a78bfa; background: rgba(167, 139, 250, 0.08); border-color: rgba(167, 139, 250, 0.2); }
+
+.carousel-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--ink-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.carousel-arrow mat-icon { font-size: 16px; width: 16px; height: 16px; }
+.carousel-arrow:hover { border-color: rgba(255, 255, 255, 0.2); }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar        { width: 5px; }
 ::-webkit-scrollbar-track  { background: var(--ink-bg-secondary); }
