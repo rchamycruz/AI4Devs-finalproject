@@ -192,7 +192,7 @@ export class QuoteChatbotComponent implements OnInit {
     this.error.set(null);
     this.calculating.set(true);
     const request = {
-      artistProfileId: this.artist()?.id ?? '',
+      artistProfileId: this.artist()?.id ?? '00000000-0000-0000-0000-000000000000',
       bodyZone: zone.slug,
       sizeReference: size.slug,
       styleId: style.id,
