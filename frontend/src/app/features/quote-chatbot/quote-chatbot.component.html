@@ -118,7 +118,9 @@
         }
         @case ('result') {
           <div class="option-chips">
-            <button class="option-chip option-chip--primary" (click)="reserve()">¿Quieres reservar? →</button>
+            @if (artist()) {
+              <button class="option-chip option-chip--primary" (click)="reserve()">¿Quieres reservar? →</button>
+            }
             <button class="option-chip" (click)="close()">Cerrar</button>
           </div>
         }
