@@ -145,15 +145,23 @@
           <h2 class="home-section__title">Estilos populares</h2>
           <p class="home-section__sub">Encuentra artistas especializados en el estilo que siempre quisiste</p>
         </div>
-        <div class="home-styles">
-          @for (item of popularStyles(); track item.style) {
-            <button class="home-styles__item" (click)="goStyle(item.style)">
-              <span class="home-styles__circle">
-                <img [src]="item.thumbnailUrl ?? item.imageUrl" [alt]="item.style" loading="lazy" />
-              </span>
-              <span class="home-styles__name">{{ item.style }}</span>
-            </button>
-          }
+        <div class="home-styles-wrapper">
+          <button class="home-styles__arrow home-styles__arrow--left" (click)="scrollStyles('left')" aria-label="Anterior">
+            <span>‹</span>
+          </button>
+          <div class="home-styles" #stylesCarousel>
+            @for (item of popularStyles(); track item.style) {
+              <button class="home-styles__item" (click)="goStyle(item.style)">
+                <span class="home-styles__circle">
+                  <img [src]="item.thumbnailUrl ?? item.imageUrl" [alt]="item.style" loading="lazy" />
+                </span>
+                <span class="home-styles__name">{{ item.style }}</span>
+              </button>
+            }
+          </div>
+          <button class="home-styles__arrow home-styles__arrow--right" (click)="scrollStyles('right')" aria-label="Siguiente">
+            <span>›</span>
+          </button>
         </div>
       </section>
     }

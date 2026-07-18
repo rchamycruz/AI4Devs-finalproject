@@ -257,11 +257,20 @@ export class ArtistProfileComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.holding.set(false);
-          this.holdError.set(
-            err.status === 409
-              ? 'Este horario ya fue reservado. Elige otro, por favor.'
-              : 'No pudimos reservar el horario. Inténtalo de nuevo.'
-          );
+          const msg = err.error?.message;
+          let userMsg: string;
+          if (err.status === 409) {
+            userMsg = 'Este horario ya fue reservado. Elige otro, por favor.';
+          } else if (err.status === 422) {
+            userMsg = msg ?? 'El horario seleccionado no es válido. Intenta con otro.';
+          } else if (err.status === 404) {
+            userMsg = 'Artista no encontrado. Intenta recargar la página.';
+          } else if (err.status === 401) {
+            userMsg = 'Debes iniciar sesión para reservar.';
+          } else {
+            userMsg = 'No pudimos reservar el horario. Inténtalo de nuevo.';
+          }
+          this.holdError.set(userMsg);
         }
       });
   }

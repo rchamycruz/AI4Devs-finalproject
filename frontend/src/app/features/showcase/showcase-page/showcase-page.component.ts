@@ -41,6 +41,7 @@ export class ShowcasePageComponent implements OnInit {
   private readonly router = inject(Router);
 
   @ViewChild('carousel') carouselRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('stylesCarousel') stylesCarouselRef?: ElementRef<HTMLDivElement>;
 
   readonly sections = signal<ShowcaseSection[]>([]);
   readonly loading = signal(true);
@@ -173,6 +174,13 @@ export class ShowcasePageComponent implements OnInit {
 
   scrollCarousel(direction: 1 | -1): void {
     this.carouselRef?.nativeElement.scrollBy({ left: direction * 640, behavior: 'smooth' });
+  }
+
+  scrollStyles(direction: 'left' | 'right'): void {
+    const el = this.stylesCarouselRef?.nativeElement;
+    if (el) {
+      el.scrollBy({ left: direction === 'left' ? -240 : 240, behavior: 'smooth' });
+    }
   }
 
   subscribeNewsletter(): void {
