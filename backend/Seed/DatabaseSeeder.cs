@@ -342,9 +342,8 @@ public class DatabaseSeeder
             for (var i = 0; i < a.PortfolioCount; i++)
             {
                 var style = artistStyles[i % artistStyles.Count];
-                // Each artist gets a unique image range: artistIndex * maxPortfolioSize + i
-                // If beyond catalog size, picsum fallback ensures uniqueness
-                var imageUrl = TattooImageCatalog.GetUrl(style.Slug, artistIndex * 12 + i);
+                // Figma approach: each artist gets a rotated view of the gallery
+                var imageUrl = TattooImageCatalog.GetPortfolioUrl(artistIndex, i);
                 profile.PortfolioItems.Add(new PortfolioItem
                 {
                     Id = Guid.NewGuid(),
