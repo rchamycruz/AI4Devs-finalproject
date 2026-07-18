@@ -309,4 +309,13 @@
       </div>
     </section>
   }
+
+  <!-- Chatbot modal (general quote, no artist required) -->
+  @if (showChatbot()) {
+    <div class="chatbot-overlay" (click)="closeChatbot()">
+      <div class="chatbot-overlay__panel" (click)="$event.stopPropagation()">
+        <app-quote-chatbot [artist]="null" (closed)="closeChatbot()" (reserveRequested)="closeChatbot()" />
+      </div>
+    </div>
+  }
 </div>

@@ -6,7 +6,7 @@
         <span class="chatbot__bot-icon" aria-hidden="true">💬</span>
         <div>
           <h3 class="chatbot__heading">Cotiza tu tatuaje</h3>
-          <p class="chatbot__subheading">con {{ artist().artistName }}</p>
+          <p class="chatbot__subheading">{{ artist() ? 'con ' + artist()!.artistName : 'Cotización general' }}</p>
         </div>
       </div>
       <button class="chatbot__close" (click)="close()" aria-label="Cerrar cotizador">✕</button>

@@ -84,6 +84,7 @@ public class DatabaseSeeder
         var admin = CreateAdmin(passwordHash, now);
         var artists = CreateArtistsWithProfiles(passwordHash, now, styles);
         var (bookings, payments, reviews) = CreateReviewsWithBookings(artists, clients, now);
+        AddReviewableBookings(bookings, payments, artists, clients, now);
 
         _context.TattooStyles.AddRange(styles);
         _context.Users.AddRange(clients);
@@ -542,5 +543,58 @@ public class DatabaseSeeder
         }
 
         return (bookings, payments, reviews);
+    }
+
+    /// <summary>
+    /// Add completed bookings without reviews so clients can test the review flow.
+    /// Each client gets one reviewable booking.
+    /// </summary>
+    private static void AddReviewableBookings(
+        List<Booking> bookings, List<Payment> payments,
+        List<ArtistSeed> artists, List<User> clients, DateTime now)
+    {
+        for (var i = 0; i < Math.Min(clients.Count, artists.Count); i++)
+        {
+            var client = clients[i];
+            var profile = artists[(i + 3) % artists.Count].Profile;
+            var style = profile.ArtistStyles.First();
+            var bookingDate = DateOnly.FromDateTime(now.AddDays(-(7 + i * 2)));
+            var deposit = (int)Math.Round(
+                profile.MinSessionPrice * (profile.DepositPercentage / 100.0m), MidpointRounding.AwayFromZero);
+
+            var booking = new Booking
+            {
+                Id = Guid.NewGuid(),
+                ClientId = client.Id,
+                ArtistProfileId = profile.Id,
+                BookingDate = bookingDate,
+                StartTime = new TimeOnly(14, 0),
+                EndTime = new TimeOnly(16, 0),
+                Status = BookingStatus.Completed,
+                EstimatedPriceMin = profile.MinSessionPrice,
+                EstimatedPriceMax = profile.MinSessionPrice + profile.HourlyRate,
+                DepositAmount = deposit,
+                BodyZone = BodyZones[i % BodyZones.Length],
+                SizeReference = "Palma (~8 cm)",
+                StyleId = style.StyleId,
+                IsColor = i % 2 == 0,
+                IsCoverup = false,
+                CreatedAt = now.AddDays(-(14 + i * 2))
+            };
+            bookings.Add(booking);
+
+            var platformFee = (int)Math.Round(deposit * CommissionRate, MidpointRounding.AwayFromZero);
+            payments.Add(new Payment
+            {
+                Id = Guid.NewGuid(),
+                BookingId = booking.Id,
+                FlowTransactionId = $"SEED-NOREVIEW-{i:D2}",
+                Amount = deposit,
+                PlatformFee = platformFee,
+                ArtistAmount = deposit - platformFee,
+                Status = PaymentStatus.Completed,
+                PaidAt = booking.CreatedAt.AddMinutes(5)
+            });
+        }
     }
 }

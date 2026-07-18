@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ArtistCardComponent } from '../../../shared/components/artist-card/artist-card.component';
+import { QuoteChatbotComponent } from '../../quote-chatbot/quote-chatbot.component';
 import { ShowcaseService } from '../showcase.service';
 import { ShowcaseSection } from '../../../core/models/showcase.models';
 
@@ -31,7 +32,7 @@ interface CommunityReview {
 @Component({
   selector: 'app-showcase-page',
   standalone: true,
-  imports: [FormsModule, MatIconModule, ArtistCardComponent],
+  imports: [FormsModule, MatIconModule, ArtistCardComponent, QuoteChatbotComponent],
   templateUrl: './showcase-page.component.html',
   styleUrl: './showcase-page.component.scss'
 })
@@ -150,12 +151,13 @@ export class ShowcasePageComponent implements OnInit {
   }
 
   goTopArtistChatbot(): void {
-    const top = this.topRated();
-    if (top && top.items.length > 0) {
-      this.router.navigate(['/artista', top.items[0].artist.slug], { queryParams: { cotizar: '1' } });
-    } else {
-      this.router.navigate(['/artistas']);
-    }
+    this.showChatbot.set(true);
+  }
+
+  readonly showChatbot = signal(false);
+
+  closeChatbot(): void {
+    this.showChatbot.set(false);
   }
 
   goNearMe(): void {
