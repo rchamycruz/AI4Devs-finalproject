@@ -258,6 +258,7 @@ export class ArtistProfileComponent implements OnInit {
         error: (err: HttpErrorResponse) => {
           this.holding.set(false);
           const msg = err.error?.message;
+          console.error('[Hold] Error:', err.status, err.statusText, msg, err);
           let userMsg: string;
           if (err.status === 409) {
             userMsg = 'Este horario ya fue reservado. Elige otro, por favor.';
@@ -268,7 +269,7 @@ export class ArtistProfileComponent implements OnInit {
           } else if (err.status === 401) {
             userMsg = 'Debes iniciar sesión para reservar.';
           } else {
-            userMsg = 'No pudimos reservar el horario. Inténtalo de nuevo.';
+            userMsg = `No pudimos reservar el horario (${err.status}). Inténtalo de nuevo.`;
           }
           this.holdError.set(userMsg);
         }
