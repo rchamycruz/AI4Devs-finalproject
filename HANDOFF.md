@@ -53,7 +53,11 @@ Retoma el trabajo desde el punto indicado en "Estado detallado" de HANDOFF.md.
   - ✅ Fase 0: tokens (#0D0D0D/#D4AF37), tema Material M3 oscuro, tipografía Inter/Geist, rebrand textos visibles (claves localStorage `inklink_*` intactas a propósito).
   - ✅ Home con estructura del prototipo (hero + buscador funcional, carrusel top_rated, estilos, banners, grids near_you/premiados, footer y nav global con blur + nav móvil inferior).
   - ✅ Perfil de artista con estructura del prototipo (hero backdrop, tabs Portafolio/Reseñas/Info, booking card sticky, booking bar móvil). Flujos de cotización/reserva intactos.
-  - Pendiente (fases 3, 5–8 del plan): listado de artistas, restyle fino del chatbot, auth/cuenta/reservas, mapa, verificación e2e completa y PR.
+  - ✅ Listado de artistas (`/artistas`) con filtros al estilo Figma: slider de precio, filtro de comuna (select), toggle "Solo premiados", toggle "Certificación sanitaria", tipo de artista, rating mínimo. Vistas grid/lista.
+  - ✅ FavoritesService (localStorage) + botón ❤️ en tarjeta de artista.
+  - ✅ Filtro de comuna en Home conectado al listado vía queryParam.
+  - ✅ Seed ampliado: 14 artistas con reviews (4 dimensiones), certificaciones, premios y auspicios variados.
+  - Pendiente (fases 5–8 del plan): restyle fino del chatbot, auth/cuenta/reservas, mapa, verificación e2e completa y PR.
   - 126/126 tests frontend en verde; `ng build` producción OK. Budget `anyComponentStyle` subido a 10kB/20kB.
 - ✅ **BACKLOG COMPLETO** — Fase 0 + las **13 US (80 SP)** mergeadas a `main` (PRs #1–#18). Última: US0011 (chatbot cotizador + depósito según cotización, `fixs/issue-007.md`).
 - ✅ **Integración Flow real validada e2e contra sandbox.flow.cl** (2026-07-16, PR #19): orden firmada HMAC → checkout Webpay real con tarjeta de prueba → confirm firmado → pago `completed` y reserva `confirmed`. Guía completa (levantar proyecto, credenciales por entorno, tarjetas, confirm manual): **`docs/flow-sandbox-testing.md`**.
