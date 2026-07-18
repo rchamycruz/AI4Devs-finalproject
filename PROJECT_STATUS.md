@@ -1,7 +1,8 @@
 # PROJECT_STATUS — INK·LINK
 
 > Estado actual del proyecto. **Este documento debe actualizarse al cerrar cada Historia de Usuario o hito.**
-> Última actualización: 2026-07-17 — 🏷️ **[v1.0.0](https://github.com/rchamycruz/AI4Devs-finalproject/releases/tag/v1.0.0) publicada: primera versión estable del MVP** (backlog completo 13 US / 80 SP · 235 tests en verde · Flow validado e2e contra sandbox · documentación de entrega consolidada — PRs #21 y #22)
+> Última actualización: 2026-07-18 — 🎨 **Rediseño Figma en curso** en rama `feature/rediseno-figma` (sin mergear): rebrand INKSPIRE + Home y Perfil de artista con la estructura del prototipo Figma Make. Plan y avance: `docs/plan-rediseno-figma.md` y `HANDOFF.md`.
+> Hito previo: 🏷️ **[v1.0.0](https://github.com/rchamycruz/AI4Devs-finalproject/releases/tag/v1.0.0)** (backlog completo 13 US / 80 SP · 235 tests en verde · Flow validado e2e contra sandbox · documentación de entrega consolidada — PRs #21 y #22)
 > **Traspaso entre sesiones/IAs**: ver `HANDOFF.md` (prompt de continuación + protocolo de registro de avance)
 
 ## Resumen
