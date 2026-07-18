@@ -301,6 +301,10 @@
           <button type="button" class="btn-gold booking-card__reserve" (click)="scrollToBooking()">
             <span class="material-icons">event</span> Reservar sesión
           </button>
+          <button type="button" class="booking-card__save" [class.booking-card__save--active]="isFavorite()" (click)="toggleFavorite()" [attr.aria-pressed]="isFavorite()">
+            <span class="material-icons">{{ isFavorite() ? 'favorite' : 'favorite_border' }}</span>
+            {{ isFavorite() ? 'Guardado' : 'Guardar artista' }}
+          </button>
         </div>
         <div class="booking-card__policy">
           Cancelación: {{ getCancellationLabel(a.cancellationPolicy) }} · Depósito protegido

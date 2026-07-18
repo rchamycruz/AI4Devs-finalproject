@@ -35,6 +35,15 @@
             }
           </select>
         </label>
+        <label class="home-hero__field home-hero__field--select home-hero__field--commune">
+          <mat-icon>place</mat-icon>
+          <select [(ngModel)]="communeFilter">
+            <option value="">Toda la RM</option>
+            @for (commune of communeOptions; track commune) {
+              <option [value]="commune">{{ commune }}</option>
+            }
+          </select>
+        </label>
         <button class="home-hero__search-btn" (click)="goSearch()">
           <mat-icon>search</mat-icon> Buscar
         </button>

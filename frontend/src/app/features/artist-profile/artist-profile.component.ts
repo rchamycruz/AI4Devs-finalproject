@@ -7,6 +7,7 @@ import { ArtistProfileDto, ReviewDto } from '../../core/models/artist-profile.mo
 import { BookableSlot } from '../../core/models/booking.models';
 import { ArtistProfileService } from './services/artist-profile.service';
 import { AuthService } from '../../core/services/auth.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { BookingService } from '../booking/services/booking.service';
 import { WeeklyCalendarComponent } from '../booking/components/weekly-calendar/weekly-calendar.component';
 import { SponsorshipSectionComponent } from './components/sponsorship-section/sponsorship-section.component';
@@ -29,6 +30,7 @@ export class ArtistProfileComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly bookingService = inject(BookingService);
   private readonly quoteService = inject(QuoteService);
+  protected readonly favoritesService = inject(FavoritesService);
 
   readonly artist = signal<ArtistProfileDto | null>(null);
   readonly holdError = signal<string | null>(null);
@@ -176,6 +178,18 @@ export class ArtistProfileComponent implements OnInit {
 
   getActiveCertifications(): boolean {
     return (this.artist()?.certifications ?? []).some(c => c.isActive);
+  }
+
+  readonly isFavorite = computed(() => {
+    const id = this.artist()?.id;
+    return id != null && this.favoritesService.favorites().has(id);
+  });
+
+  toggleFavorite(): void {
+    const id = this.artist()?.id;
+    if (id != null) {
+      this.favoritesService.toggle(id);
+    }
   }
 
   /** US0011 CA1 — the "Cotizar" CTA opens the chatbot overlay. */

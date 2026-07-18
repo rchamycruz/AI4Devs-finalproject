@@ -61,6 +61,7 @@ export class ShowcasePageComponent implements OnInit {
 
   searchText = '';
   styleFilter = '';
+  communeFilter = '';
   newsletterEmail = '';
   readonly newsletterDone = signal(false);
 
@@ -70,6 +71,11 @@ export class ShowcasePageComponent implements OnInit {
   ];
 
   readonly quickTags = ['Fine-line', 'Blackwork', 'Japonés', 'Realismo', 'Minimalista'];
+
+  readonly communeOptions = [
+    'Providencia', 'Ñuñoa', 'Barrio Italia', 'Bellavista', 'Las Condes',
+    'Vitacura', 'Santiago Centro', 'La Reina', 'Macul'
+  ];
 
   readonly heroStats = [
     { value: '1.200+', label: 'Artistas activos' },
@@ -123,7 +129,14 @@ export class ShowcasePageComponent implements OnInit {
 
   goSearch(): void {
     const queryParams: Record<string, string> = {};
-    if (this.searchText.trim().length >= 2) queryParams['search'] = this.searchText.trim();
+    const text = this.searchText.trim();
+    // The backend's `search` matches name, commune, bio and style via a single
+    // ILIKE pattern, so free text takes precedence over the commune preset.
+    if (text.length >= 2) {
+      queryParams['search'] = text;
+    } else if (this.communeFilter) {
+      queryParams['search'] = this.communeFilter;
+    }
     if (this.styleFilter) queryParams['styles'] = this.styleFilter;
     this.router.navigate(['/artistas'], { queryParams });
   }

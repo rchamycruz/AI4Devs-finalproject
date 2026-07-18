@@ -383,6 +383,28 @@ $bp: 1024px;
 
   &__reserve { width: 100%; .material-icons { font-size: 15px; } }
 
+  &__save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.65rem;
+    font-size: 0.875rem;
+    border-radius: var(--ink-radius-sm);
+    color: var(--ink-text-secondary);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    font-family: inherit;
+
+    .material-icons { font-size: 14px; }
+
+    &:hover { color: var(--ink-text-primary); border-color: rgba(255, 255, 255, 0.2); }
+    &--active { color: var(--ink-accent); border-color: rgba(212, 175, 55, 0.3); }
+  }
+
   &__policy {
     padding: 0 1.25rem 1.25rem;
     font-size: 10px;

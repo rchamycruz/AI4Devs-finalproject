@@ -1,4 +1,4 @@
-<a class="artist-card" [routerLink]="['/artista', cardArtist()?.slug]">
+<a class="artist-card" [class.artist-card--list]="layout() === 'list'" [routerLink]="['/artista', cardArtist()?.slug]">
   <div class="artist-card__image-wrapper">
     @if (cardImage()) {
       <img
@@ -27,6 +27,17 @@
       }
     </div>
 
+    <button
+      type="button"
+      class="artist-card__fav"
+      [class.artist-card__fav--active]="isFavorite()"
+      (click)="toggleFavorite($event)"
+      [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Guardar artista'"
+      [attr.aria-pressed]="isFavorite()"
+    >
+      <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+
     <div class="artist-card__overlay">
       <p class="artist-card__name">{{ cardArtist()?.artistName }}</p>
       <p class="artist-card__type">{{ cardArtist()?.artistType === 'studio' ? 'Estudio' : 'Independiente' }}</p>
@@ -34,6 +45,10 @@
   </div>
 
   <div class="artist-card__body">
+    @if (layout() === 'list') {
+      <p class="artist-card__list-name">{{ cardArtist()?.artistName }}</p>
+    }
+
     <div class="artist-card__rating">
       <span class="artist-card__stars" aria-hidden="true">
         @for (star of stars; track star) {
@@ -42,6 +57,11 @@
       </span>
       <span class="artist-card__rating-value">{{ cardArtist()?.averageRating | number: '1.1-1' }}</span>
       <span class="artist-card__reviews">({{ cardArtist()?.reviewCount }})</span>
+      @if (layout() === 'list') {
+        <span class="artist-card__location artist-card__location--inline">
+          <mat-icon>place</mat-icon>{{ cardArtist()?.commune }}
+        </span>
+      }
     </div>
 
     <div class="artist-card__styles">
@@ -51,10 +71,18 @@
     </div>
 
     <div class="artist-card__meta">
-      <span class="artist-card__location">
-        <mat-icon>place</mat-icon>{{ cardArtist()?.commune }}
-      </span>
-      <span class="artist-card__price">{{ formattedRate() }}/hr</span>
+      @if (layout() === 'list') {
+        <div>
+          <div class="artist-card__price-label">Tarifa por hora</div>
+          <span class="artist-card__price">{{ formattedRate() }}/hr</span>
+        </div>
+        <span class="artist-card__view-btn">Ver perfil <mat-icon>chevron_right</mat-icon></span>
+      } @else {
+        <span class="artist-card__location">
+          <mat-icon>place</mat-icon>{{ cardArtist()?.commune }}
+        </span>
+        <span class="artist-card__price">{{ formattedRate() }}/hr</span>
+      }
     </div>
 
     <app-sponsor-badges [badges]="cardArtist()?.sponsorBadges ?? []" />

@@ -117,6 +117,8 @@ $bp: 768px;
 
     select { cursor: pointer; appearance: none; }
     option { background: var(--ink-bg-card); }
+
+    &--commune { @media (min-width: $bp) { flex: 0 0 auto; min-width: 150px; } }
   }
 
   &__search-btn {
