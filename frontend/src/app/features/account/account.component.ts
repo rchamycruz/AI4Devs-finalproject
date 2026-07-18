@@ -97,7 +97,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     .account-name {
       margin: 0 0 4px;
-      font-family: 'Playfair Display', serif;
+      font-family: var(--ink-font-display);
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--ink-text-primary);

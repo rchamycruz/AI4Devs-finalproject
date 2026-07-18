@@ -28,7 +28,7 @@
 
   &__title {
     margin: 0;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--ink-font-display);
     font-size: clamp(2.3rem, 5vw, 3.7rem);
     line-height: 1.1;
   }
@@ -80,7 +80,7 @@
 
   &__heading {
     margin: 0;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--ink-font-display);
     font-size: 1.7rem;
   }
 
@@ -143,7 +143,7 @@
 
     h3 {
       margin: 0;
-      font-family: 'Playfair Display', serif;
+      font-family: var(--ink-font-display);
       font-size: 1.7rem;
     }
 
@@ -256,7 +256,7 @@
 
     h2 {
       margin: 0;
-      font-family: 'Playfair Display', serif;
+      font-family: var(--ink-font-display);
       font-size: 1.5rem;
     }
   }

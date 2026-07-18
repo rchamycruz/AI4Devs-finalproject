@@ -57,7 +57,7 @@ export class ArtistProfileComponent implements OnInit {
     this.artistService.getArtistProfile(slug).subscribe({
       next: (profile) => {
         this.artist.set(profile);
-        this.titleService.setTitle(`${profile.artistName} — INK·LINK`);
+        this.titleService.setTitle(`${profile.artistName} — INKSPIRE`);
         this.loading.set(false);
         this.loadReviews(slug);
         this.holdPreselectedSlot();

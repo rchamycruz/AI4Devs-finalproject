@@ -1,38 +1,82 @@
-/* INK·LINK global styles */
-@import '@angular/material/prebuilt-themes/azure-blue.css';
+/* INKSPIRE global styles */
+@use '@angular/material' as mat;
+
 @import 'leaflet/dist/leaflet.css';
 @import 'leaflet.markercluster/dist/MarkerCluster.css';
 @import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 :root {
-  /* Brand palette */
-  --ink-bg:             #0c0c0c;
-  --ink-bg-secondary:   #141414;
-  --ink-bg-card:        #1c1c1c;
-  --ink-bg-elevated:    #252525;
-  --ink-accent:         #c9a446;
-  --ink-accent-hover:   #ddb95e;
+  /* Brand palette (Figma "Premium Tattoo Marketplace") */
+  --ink-bg:             #0d0d0d;
+  --ink-bg-secondary:   #161616;
+  --ink-bg-card:        #1e1e1e;
+  --ink-bg-elevated:    #262626;
+  --ink-accent:         #d4af37;
+  --ink-accent-hover:   #e2c14f;
+  --ink-accent-soft:    rgba(212, 175, 55, 0.12);
 
   /* Typography */
-  --ink-text-primary:   #f0ede8;
-  --ink-text-secondary: #888888;
-  --ink-text-muted:     #505050;
+  --ink-text-primary:   #ffffff;
+  --ink-text-secondary: #a3a3a3;
+  --ink-text-muted:     #6b6b6b;
+  --ink-font-body:      'Inter', 'Geist', system-ui, sans-serif;
+  --ink-font-display:   'Inter', 'Geist', system-ui, sans-serif;
 
   /* Structure */
   --ink-border:         rgba(255, 255, 255, 0.07);
-  --ink-border-accent:  rgba(201, 164, 70, 0.25);
+  --ink-border-accent:  rgba(212, 175, 55, 0.25);
+  --ink-ring:           rgba(212, 175, 55, 0.4);
   --ink-shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.4);
   --ink-shadow-md:      0 4px 20px rgba(0, 0, 0, 0.5);
   --ink-shadow-lg:      0 8px 40px rgba(0, 0, 0, 0.65);
-  --ink-radius:         12px;
+  --ink-shadow-accent:  0 8px 32px rgba(212, 175, 55, 0.3);
+  --ink-radius-sm:      12px;
+  --ink-radius:         16px;
+  --ink-radius-lg:      20px;
   --ink-certified:      #34d399;
+}
+
+/* Angular Material dark theme (gold accent) */
+html {
+  color-scheme: dark;
+
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+      primary: mat.$yellow-palette,
+      tertiary: mat.$yellow-palette
+    ),
+    typography: (
+      plain-family: Inter,
+      brand-family: Inter
+    ),
+    density: 0
+  ));
+
+  /* Pin Material system tokens to the exact brand values */
+  --mat-sys-primary: #d4af37;
+  --mat-sys-on-primary: #0d0d0d;
+  --mat-sys-primary-container: rgba(212, 175, 55, 0.18);
+  --mat-sys-on-primary-container: #e9d38a;
+  --mat-sys-secondary: #a3a3a3;
+  --mat-sys-on-secondary: #0d0d0d;
+  --mat-sys-surface: #0d0d0d;
+  --mat-sys-on-surface: #ffffff;
+  --mat-sys-surface-container-lowest: #0d0d0d;
+  --mat-sys-surface-container-low: #161616;
+  --mat-sys-surface-container: #1e1e1e;
+  --mat-sys-surface-container-high: #262626;
+  --mat-sys-surface-container-highest: #2e2e2e;
+  --mat-sys-on-surface-variant: #a3a3a3;
+  --mat-sys-outline: rgba(255, 255, 255, 0.2);
+  --mat-sys-outline-variant: rgba(255, 255, 255, 0.07);
 }
 
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: var(--ink-font-body);
   background-color: var(--ink-bg);
   color: var(--ink-text-primary);
   -webkit-font-smoothing: antialiased;
@@ -41,6 +85,11 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink-ring);
+  outline-offset: 2px;
 }
 
 /* Custom scrollbar */

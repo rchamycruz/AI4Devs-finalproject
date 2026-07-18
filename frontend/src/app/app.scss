@@ -22,22 +22,25 @@
   color: var(--ink-text-primary);
 
   &__mark {
-    font-size: 1.25rem;
-    color: var(--ink-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--ink-accent);
+    color: var(--ink-bg);
+    font-size: 0.95rem;
     line-height: 1;
     transition: opacity 0.2s ease;
   }
 
   &__name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
+    font-family: var(--ink-font-display);
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.02em;
     color: var(--ink-text-primary);
-  }
-
-  &__dot {
-    color: var(--ink-accent);
   }
 
   &:hover .app-brand__mark {
