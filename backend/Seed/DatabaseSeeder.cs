@@ -342,17 +342,15 @@ public class DatabaseSeeder
             for (var i = 0; i < a.PortfolioCount; i++)
             {
                 var style = artistStyles[i % artistStyles.Count];
-                // Featured piece uses the style's signature image; the rest rotate the
-                // shared prototype gallery so each portfolio grid looks distinct.
-                var imageId = i == 0
-                    ? StyleImageIds[style.Slug]
-                    : GalleryImageIds[(artistIndex + i) % GalleryImageIds.Length];
+                // Each artist gets a unique image range: artistIndex * maxPortfolioSize + i
+                // If beyond catalog size, picsum fallback ensures uniqueness
+                var imageUrl = TattooImageCatalog.GetUrl(style.Slug, artistIndex * 12 + i);
                 profile.PortfolioItems.Add(new PortfolioItem
                 {
                     Id = Guid.NewGuid(),
                     ArtistProfileId = profile.Id,
-                    ImageUrl = Unsplash(imageId, 800, 800),
-                    ThumbnailUrl = Unsplash(imageId, 400, 400),
+                    ImageUrl = imageUrl,
+                    ThumbnailUrl = imageUrl,
                     StyleId = style.Id,
                     IsFeatured = i == 0,
                     SortOrder = i,

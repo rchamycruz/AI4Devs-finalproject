@@ -50,12 +50,15 @@
       </div>
 
       <div class="home-hero__tags">
+        <button class="home-hero__tag home-hero__tag--location" (click)="goNearMe()">
+          <mat-icon>my_location</mat-icon> Cerca de mí
+        </button>
         @for (tag of quickTags; track tag) {
           <button class="home-hero__tag" (click)="goStyle(tag)">{{ tag }}</button>
         }
       </div>
 
-      <button class="home-hero__bot-cta" (click)="goArtists()">
+      <button class="home-hero__bot-cta" (click)="goTopArtistChatbot()">
         <mat-icon>smart_toy</mat-icon>
         Cotiza en segundos con nuestro asistente IA
         <mat-icon>arrow_forward</mat-icon>

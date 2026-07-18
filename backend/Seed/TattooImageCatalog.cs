@@ -165,6 +165,11 @@ public static class TattooImageCatalog
         {
             return $"https://picsum.photos/seed/{styleSlug}-{index}/800/1000";
         }
+        // When index exceeds available images, fall back to deterministic picsum
+        if (index >= urls.Length)
+        {
+            return $"https://picsum.photos/seed/{styleSlug}-{index}/800/1000";
+        }
         return urls[index % urls.Length];
     }
 }

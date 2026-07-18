@@ -268,7 +268,13 @@ export class ArtistProfileComponent implements OnInit {
 
   /** Post-login return (CA5): the slot preselected before login travels as query params. */
   private holdPreselectedSlot(): void {
-    const { slotDate, slotStart, slotEnd } = this.route.snapshot.queryParams;
+    const { slotDate, slotStart, slotEnd, cotizar } = this.route.snapshot.queryParams;
+
+    // Auto-open chatbot when arriving from the Home "Cotizar IA" CTA
+    if (cotizar === '1') {
+      this.openChatbot();
+    }
+
     if (!slotDate || !slotStart || !slotEnd || !this.authService.isAuthenticated()) {
       return;
     }

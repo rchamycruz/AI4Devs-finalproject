@@ -149,6 +149,26 @@ export class ShowcasePageComponent implements OnInit {
     this.router.navigate(['/artistas']);
   }
 
+  goTopArtistChatbot(): void {
+    const top = this.topRated();
+    if (top && top.items.length > 0) {
+      this.router.navigate(['/artista', top.items[0].artist.slug], { queryParams: { cotizar: '1' } });
+    } else {
+      this.router.navigate(['/artistas']);
+    }
+  }
+
+  goNearMe(): void {
+    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        () => this.router.navigate(['/mapa']),
+        () => this.router.navigate(['/mapa'])
+      );
+    } else {
+      this.router.navigate(['/mapa']);
+    }
+  }
+
   scrollCarousel(direction: 1 | -1): void {
     this.carouselRef?.nativeElement.scrollBy({ left: direction * 640, behavior: 'smooth' });
   }

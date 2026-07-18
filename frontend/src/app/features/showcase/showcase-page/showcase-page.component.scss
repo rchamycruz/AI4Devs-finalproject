@@ -159,7 +159,19 @@ $bp: 768px;
     border: 1px solid rgba(255, 255, 255, 0.07);
     cursor: pointer;
     transition: color 0.2s ease;
+    font-family: inherit;
     &:hover { color: var(--ink-text-primary); }
+
+    &--location {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--ink-accent);
+      background: rgba(212, 175, 55, 0.08);
+      border-color: rgba(212, 175, 55, 0.25);
+      mat-icon { font-size: 14px; width: 14px; height: 14px; }
+      &:hover { filter: brightness(1.15); }
+    }
   }
 
   &__bot-cta {
