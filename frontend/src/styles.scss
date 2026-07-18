@@ -149,6 +149,7 @@ body {
 
 .chip-gold,
 .chip-green,
+.chip-amber,
 .chip-violet {
   display: inline-flex;
   align-items: center;
@@ -159,12 +160,14 @@ body {
   padding: 3px 11px;
   border: 1px solid;
 }
-.chip-gold mat-icon,
-.chip-green mat-icon,
-.chip-violet mat-icon { font-size: 9px; width: 9px; height: 9px; }
+.chip-gold mat-icon, .chip-gold .material-icons,
+.chip-green mat-icon, .chip-green .material-icons,
+.chip-amber mat-icon, .chip-amber .material-icons,
+.chip-violet mat-icon, .chip-violet .material-icons { font-size: 10px; width: 10px; height: 10px; }
 
 .chip-gold { color: var(--ink-accent); background: rgba(212, 175, 55, 0.08); border-color: rgba(212, 175, 55, 0.2); }
 .chip-green { color: #4ade80; background: rgba(74, 222, 128, 0.07); border-color: rgba(74, 222, 128, 0.18); }
+.chip-amber { color: #fbbf24; background: rgba(251, 191, 36, 0.08); border-color: rgba(251, 191, 36, 0.2); }
 .chip-violet { color: #a78bfa; background: rgba(167, 139, 250, 0.08); border-color: rgba(167, 139, 250, 0.2); }
 
 .carousel-arrow {

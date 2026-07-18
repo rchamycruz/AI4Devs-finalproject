@@ -1,5 +1,5 @@
-import { Component, HostListener, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, HostListener, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,7 +8,6 @@ import { BookableSlot } from '../../core/models/booking.models';
 import { ArtistProfileService } from './services/artist-profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { BookingService } from '../booking/services/booking.service';
-import { CertificationBadgeComponent } from '../../shared/components/certification-badge/certification-badge.component';
 import { WeeklyCalendarComponent } from '../booking/components/weekly-calendar/weekly-calendar.component';
 import { SponsorshipSectionComponent } from './components/sponsorship-section/sponsorship-section.component';
 import { QuoteChatbotComponent } from '../quote-chatbot/quote-chatbot.component';
@@ -17,7 +16,7 @@ import { QuoteService } from '../quote-chatbot/services/quote.service';
 @Component({
   selector: 'app-artist-profile',
   standalone: true,
-  imports: [DatePipe, CertificationBadgeComponent, WeeklyCalendarComponent, SponsorshipSectionComponent, QuoteChatbotComponent],
+  imports: [DatePipe, RouterLink, WeeklyCalendarComponent, SponsorshipSectionComponent, QuoteChatbotComponent],
   templateUrl: './artist-profile.component.html',
   styleUrl: './artist-profile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,6 +42,27 @@ export class ArtistProfileComponent implements OnInit {
   readonly selectedImage = signal<string | null>(null);
   readonly bioExpanded = signal(false);
   readonly showChatbot = signal(false);
+  readonly activeTab = signal<'portfolio' | 'reviews' | 'info'>('portfolio');
+
+  /** Hero backdrop: the featured portfolio piece, else the first one. */
+  readonly heroImage = computed(() => {
+    const items = this.artist()?.portfolioItems ?? [];
+    return (items.find((i) => i.isFeatured) ?? items[0])?.imageUrl ?? null;
+  });
+
+  /** Aggregate of the 4 review dimensions across loaded reviews. */
+  readonly ratingDimensions = computed(() => {
+    const list = this.reviews();
+    if (list.length === 0) return [];
+    const avg = (fn: (r: ReviewDto) => number) =>
+      Math.round((list.reduce((acc, r) => acc + fn(r), 0) / list.length) * 10) / 10;
+    return [
+      { label: 'Higiene', value: avg((r) => r.ratingHygiene) },
+      { label: 'Manejo del dolor', value: avg((r) => r.ratingPainManagement) },
+      { label: 'Trato al cliente', value: avg((r) => r.ratingCustomerService) },
+      { label: 'Resultado final', value: avg((r) => r.ratingResult) }
+    ];
+  });
 
   private readonly PAGE_SIZE = 5;
 
